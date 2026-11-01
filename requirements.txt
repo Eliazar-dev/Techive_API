@@ -1,0 +1,12 @@
+Django>=5.2,<5.3
+djangorestframework>=3.16
+djangorestframework-simplejwt>=5.5
+django-cors-headers>=4.7
+django-environ>=0.12
+google-auth>=2.40
+requests>=2.32
+whitenoise>=6.9
+gunicorn>=23
+# production database (PostgreSQL). SQLite is used when DATABASE_URL is empty.
+psycopg[binary]>=3.2
+PyJWT[crypto]>=2.9
