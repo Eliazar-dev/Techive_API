@@ -4,24 +4,35 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.html import escape
 
 
-def _layout(title, paragraphs, button=None):
+def _layout(title, paragraphs, button=None, is_academy=False):
     body = ''.join(f'<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3f3f46">{p}</p>' for p in paragraphs)
     btn = (f'<p style="margin:24px 0 0"><a href="{escape(button[1])}" style="background:linear-gradient(90deg,#06c3ff,#a855f7);'
            f'color:#fff;text-decoration:none;padding:12px 28px;border-radius:99px;font-weight:700;font-size:14px;display:inline-block">{escape(button[0])}</a></p>') if button else ''
+    
+    # Logo URL - using Cloudinary or can be changed to your hosted logo
+    logo_url = 'https://res.cloudinary.com/myq7pkty/image/upload/v1793564415/logo.png' if hasattr(settings, 'MEDIA_URL') and settings.MEDIA_URL else 'https://res.cloudinary.com/myq7pkty/image/upload/v1793564415/logo.png'
+    
+    # Academy-specific header color
+    header_bg = '#1a1a2e' if is_academy else '#0a0a0b'
+    badge_text = 'ACADEMY' if is_academy else 'IT SOLUTIONS'
+    badge_color = '#a855f7' if is_academy else '#a855f7'
+    
     return f'''<!doctype html><html><body style="margin:0;background:#f4f4f5;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
 <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden" cellspacing="0" cellpadding="0">
-<tr><td style="background:#0a0a0b;padding:22px 28px"><span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:-.5px">Techive</span>
-<span style="color:#a855f7;font-size:11px;letter-spacing:3px;margin-left:8px">IT SOLUTIONS</span></td></tr>
+<tr><td style="background:{header_bg};padding:24px 28px;text-align:center">
+<img src="{logo_url}" alt="Techive Logo" width="120" height="40" style="display:block;margin:0 auto 12px" />
+<span style="color:#fff;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase">{badge_text}</span>
+</td></tr>
 <tr><td style="height:4px;background:linear-gradient(90deg,#06c3ff,#7c5cff,#a855f7)"></td></tr>
 <tr><td style="padding:32px 28px"><h1 style="margin:0 0 18px;font-size:22px;color:#0a0a0b">{escape(title)}</h1>{body}{btn}</td></tr>
 <tr><td style="padding:18px 28px;background:#fafafa;color:#8b8b95;font-size:12px">Techive IT Solutions &middot; Archiving Innovation. Coding the Future.</td></tr>
 </table></td></tr></table></body></html>'''
 
 
-def send_html(subject, to, text, title, paragraphs, button=None, fail_silently=False):
+def send_html(subject, to, text, title, paragraphs, button=None, fail_silently=False, is_academy=False):
     msg = EmailMultiAlternatives(subject, text, settings.DEFAULT_FROM_EMAIL, [to] if isinstance(to, str) else to)
-    msg.attach_alternative(_layout(title, paragraphs, button), 'text/html')
+    msg.attach_alternative(_layout(title, paragraphs, button, is_academy), 'text/html')
     msg.send(fail_silently=fail_silently)
 
 
@@ -51,9 +62,12 @@ def send_welcome(user):
         f'Hi {first_name(user)}, welcome to Techive IT Solutions! Your account is ready: {url}',
         f'Welcome, {first_name(user)}!',
         ['Your Techive account has been created and your email is verified.',
-         'You can now request quotes for websites, apps and business systems, and register for courses at Techive Academy.',
-         'If you ever need help, just reply to this email.'],
-        ('Open Techive', url), fail_silently=True)
+         '<b>What you can do now:</b>',
+         '• Request quotes for websites, apps and business systems',
+         '• Register for courses at Techive Academy',
+         '• Track your progress and manage your profile',
+         'Our team is here to help you succeed. If you have any questions, just reply to this email.'],
+        ('Get Started', url), fail_silently=True)
 
 
 def send_password_changed(user):
@@ -66,16 +80,19 @@ def send_password_changed(user):
 def send_course_registration(reg, till_number='', payment_note=''):
     c, u = reg.course, reg.user
     price = f'KSh {c.price:,}' if c.price else 'To be announced'
-    lines = [f'Hi {first_name(u)}, you are registered for <b>{escape(c.name)}</b>. Here is what happens next.',
-             f'<b>Duration:</b> {escape(c.duration or "To be announced")}<br><b>Mode of teaching:</b> {escape(c.get_mode_display())}<br><b>Fee:</b> {price}']
+    lines = [f'🎉 <b>Congratulations, {first_name(u)}!</b> You are now registered for <b>{escape(c.name)}</b>.',
+             f'<b>Track:</b> {escape(c.track)}',
+             f'<b>Duration:</b> {escape(c.duration or "To be announced")}',
+             f'<b>Mode of teaching:</b> {escape(c.get_mode_display())}',
+             f'<b>Fee:</b> {price}']
     if c.rules:
-        lines.append('<b>Course rules</b><br>' + escape(c.rules).replace('\n', '<br>'))
+        lines.append('<br><b>📋 Course rules</b><br>' + escape(c.rules).replace('\n', '<br>'))
     pay = c.payment_plan or payment_note
     if pay:
-        lines.append('<b>Payment plan</b><br>' + escape(pay).replace('\n', '<br>'))
+        lines.append('<br><b>💳 Payment plan</b><br>' + escape(pay).replace('\n', '<br>'))
     if till_number:
-        lines.append(f'<b>Till number:</b> {escape(till_number)}')
-    lines.append('Our team will contact you with the class schedule. You can follow your progress any time in the Academy section of the website.')
+        lines.append(f'<br><b>📱 Till number:</b> {escape(till_number)}')
+    lines.append('<br><b>What happens next:</b><br>Our team will contact you with the class schedule and login details. You can track your progress and access course materials anytime in the Academy section of the website.')
     text = f'Hi {first_name(u)}, you are registered for {c.name}. Duration: {c.duration}. Mode: {c.get_mode_display()}. Fee: {price}.'
-    send_html(f'You are registered: {c.name}', u.email, text, 'Registration confirmed', lines,
-              ('View my courses', settings.FRONTEND_URL.rstrip('/') + '/academy'), fail_silently=True)
+    send_html(f'Academy Registration: {c.name}', u.email, text, 'Registration Confirmed', lines,
+              ('Go to Academy', settings.FRONTEND_URL.rstrip('/') + '/academy'), fail_silently=True, is_academy=True)
