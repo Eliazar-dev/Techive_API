@@ -9,20 +9,16 @@ def _layout(title, paragraphs, button=None, is_academy=False):
     btn = (f'<p style="margin:24px 0 0"><a href="{escape(button[1])}" style="background:linear-gradient(90deg,#06c3ff,#a855f7);'
            f'color:#fff;text-decoration:none;padding:12px 28px;border-radius:99px;font-weight:700;font-size:14px;display:inline-block">{escape(button[0])}</a></p>') if button else ''
     
-    # Logo URL - using Cloudinary or can be changed to your hosted logo
-    logo_url = 'https://res.cloudinary.com/myq7pkty/image/upload/v1793564415/logo.png' if hasattr(settings, 'MEDIA_URL') and settings.MEDIA_URL else 'https://res.cloudinary.com/myq7pkty/image/upload/v1793564415/logo.png'
-    
     # Academy-specific header color
     header_bg = '#1a1a2e' if is_academy else '#0a0a0b'
     badge_text = 'ACADEMY' if is_academy else 'IT SOLUTIONS'
-    badge_color = '#a855f7' if is_academy else '#a855f7'
     
     return f'''<!doctype html><html><body style="margin:0;background:#f4f4f5;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
 <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden" cellspacing="0" cellpadding="0">
-<tr><td style="background:{header_bg};padding:24px 28px;text-align:center">
-<img src="{logo_url}" alt="Techive Logo" width="120" height="40" style="display:block;margin:0 auto 12px" />
-<span style="color:#fff;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase">{badge_text}</span>
+<tr><td style="background:{header_bg};padding:22px 28px">
+<span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:-.5px">Techive</span>
+<span style="color:#a855f7;font-size:11px;letter-spacing:3px;margin-left:8px">{badge_text}</span>
 </td></tr>
 <tr><td style="height:4px;background:linear-gradient(90deg,#06c3ff,#7c5cff,#a855f7)"></td></tr>
 <tr><td style="padding:32px 28px"><h1 style="margin:0 0 18px;font-size:22px;color:#0a0a0b">{escape(title)}</h1>{body}{btn}</td></tr>
