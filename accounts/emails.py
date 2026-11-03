@@ -9,30 +9,30 @@ def _layout(title, paragraphs, button=None, is_academy=False, copy_code=None):
     btn = (f'<p style="margin:24px 0 0"><a href="{escape(button[1])}" style="background:linear-gradient(90deg,#06c3ff,#a855f7);'
            f'color:#fff;text-decoration:none;padding:12px 28px;border-radius:99px;font-weight:700;font-size:14px;display:inline-block">{escape(button[0])}</a></p>') if button else ''
     
-    # Copy code button for OTP emails
-    copy_btn = f'''<div style="margin:20px 0 0;text-align:center">
-      <button onclick="navigator.clipboard.writeText('{copy_code}');this.textContent='Copied!';setTimeout(() => this.textContent='Copy Code', 2000);" 
-              style="background:#f4f4f5;border:2px solid #06c3ff;color:#06c3ff;padding:10px 24px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s">
-        Copy Code
-      </button>
+    # Copy code button for OTP emails - using pre-selected text for better compatibility
+    copy_btn = f'''<div style="margin:20px 0 0;text-align:center;background:#f4f4f5;padding:16px;border-radius:12px;border:2px dashed #06c3ff">
+      <p style="margin:0 0 8px;font-size:13px;color:#6b7280">Your code is pre-selected below. Just press Ctrl+C (or Cmd+C on Mac) to copy:</p>
+      <input type="text" value="{copy_code}" readonly style="width:200px;padding:10px;text-align:center;font-size:18px;font-weight:800;letter-spacing:8px;border:1px solid #06c3ff;border-radius:8px;background:#fff;color:#0a0a0b;font-family:monospace" />
     </div>''' if copy_code else ''
     
     # Logo URL from Cloudinary
     logo_url = 'https://res.cloudinary.com/myq7pkty/image/upload/v1793739663/Techive_IT_Solutions_Logo_2.png'
     
-    # Academy-specific header color
-    header_bg = '#1a1a2e' if is_academy else '#0a0a0b'
+    # Academy-specific header color (white background with purple accent)
+    header_bg = '#ffffff'
+    text_color = '#0a0a0b'
+    badge_color = '#a855f7'
     badge_text = 'ACADEMY' if is_academy else 'IT SOLUTIONS'
     
     return f'''<!doctype html><html><body style="margin:0;background:#f4f4f5;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
 <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden" cellspacing="0" cellpadding="0">
-<tr><td style="background:{header_bg};padding:20px 28px;text-align:center">
-<img src="{logo_url}" alt="Techive IT Solutions Logo" width="140" style="display:block;margin:0 auto" />
-<span style="color:#a855f7;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;display:block;margin-top:8px">{badge_text}</span>
+<tr><td style="background:{header_bg};padding:20px 28px;text-align:center;border-bottom:2px solid #f4f4f5">
+<img src="{logo_url}" alt="Techive IT Solutions Logo" width="160" style="display:block;margin:0 auto" />
+<span style="color:{badge_color};font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;display:block;margin-top:8px">{badge_text}</span>
 </td></tr>
 <tr><td style="height:4px;background:linear-gradient(90deg,#06c3ff,#7c5cff,#a855f7)"></td></tr>
-<tr><td style="padding:32px 28px"><h1 style="margin:0 0 18px;font-size:22px;color:#0a0a0b">{escape(title)}</h1>{body}{btn}{copy_btn}</td></tr>
+<tr><td style="padding:32px 28px"><h1 style="margin:0 0 18px;font-size:22px;color:{text_color}">{escape(title)}</h1>{body}{btn}{copy_btn}</td></tr>
 <tr><td style="padding:18px 28px;background:#fafafa;color:#8b8b95;font-size:12px">Techive IT Solutions &middot; Archiving Innovation. Coding the Future.</td></tr>
 </table></td></tr></table></body></html>'''
 
