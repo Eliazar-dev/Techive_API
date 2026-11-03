@@ -4,10 +4,18 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.html import escape
 
 
-def _layout(title, paragraphs, button=None, is_academy=False):
+def _layout(title, paragraphs, button=None, is_academy=False, copy_code=None):
     body = ''.join(f'<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3f3f46">{p}</p>' for p in paragraphs)
     btn = (f'<p style="margin:24px 0 0"><a href="{escape(button[1])}" style="background:linear-gradient(90deg,#06c3ff,#a855f7);'
            f'color:#fff;text-decoration:none;padding:12px 28px;border-radius:99px;font-weight:700;font-size:14px;display:inline-block">{escape(button[0])}</a></p>') if button else ''
+    
+    # Copy code button for OTP emails
+    copy_btn = f'''<div style="margin:20px 0 0;text-align:center">
+      <button onclick="navigator.clipboard.writeText('{copy_code}');this.textContent='Copied!';setTimeout(() => this.textContent='Copy Code', 2000);" 
+              style="background:#f4f4f5;border:2px solid #06c3ff;color:#06c3ff;padding:10px 24px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s">
+        Copy Code
+      </button>
+    </div>''' if copy_code else ''
     
     # Logo URL from Cloudinary
     logo_url = 'https://res.cloudinary.com/myq7pkty/image/upload/v1793739663/Techive_IT_Solutions_Logo_2.png'
@@ -19,19 +27,19 @@ def _layout(title, paragraphs, button=None, is_academy=False):
     return f'''<!doctype html><html><body style="margin:0;background:#f4f4f5;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
 <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden" cellspacing="0" cellpadding="0">
-<tr><td style="background:{header_bg};padding:22px 28px;text-align:center">
-<img src="{logo_url}" alt="Techive IT Solutions Logo" width="180" style="display:block;margin:0 auto 8px" />
-<span style="color:#fff;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase">{badge_text}</span>
+<tr><td style="background:{header_bg};padding:20px 28px;text-align:center">
+<img src="{logo_url}" alt="Techive IT Solutions Logo" width="140" style="display:block;margin:0 auto" />
+<span style="color:#a855f7;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;display:block;margin-top:8px">{badge_text}</span>
 </td></tr>
 <tr><td style="height:4px;background:linear-gradient(90deg,#06c3ff,#7c5cff,#a855f7)"></td></tr>
-<tr><td style="padding:32px 28px"><h1 style="margin:0 0 18px;font-size:22px;color:#0a0a0b">{escape(title)}</h1>{body}{btn}</td></tr>
+<tr><td style="padding:32px 28px"><h1 style="margin:0 0 18px;font-size:22px;color:#0a0a0b">{escape(title)}</h1>{body}{btn}{copy_btn}</td></tr>
 <tr><td style="padding:18px 28px;background:#fafafa;color:#8b8b95;font-size:12px">Techive IT Solutions &middot; Archiving Innovation. Coding the Future.</td></tr>
 </table></td></tr></table></body></html>'''
 
 
-def send_html(subject, to, text, title, paragraphs, button=None, fail_silently=False, is_academy=False):
+def send_html(subject, to, text, title, paragraphs, button=None, fail_silently=False, is_academy=False, copy_code=None):
     msg = EmailMultiAlternatives(subject, text, settings.DEFAULT_FROM_EMAIL, [to] if isinstance(to, str) else to)
-    msg.attach_alternative(_layout(title, paragraphs, button, is_academy), 'text/html')
+    msg.attach_alternative(_layout(title, paragraphs, button, is_academy, copy_code), 'text/html')
     msg.send(fail_silently=fail_silently)
 
 
@@ -51,7 +59,8 @@ def send_otp(email, code, purpose):
         'Your verification code',
         [f'Use this code to {what} your Techive account:',
          f'<span style="display:inline-block;font-size:34px;font-weight:800;letter-spacing:10px;color:#0a0a0b;background:#f4f4f5;padding:12px 22px;border-radius:14px">{code}</span>',
-         f'It expires in {ttl} minutes. If you did not request this, you can safely ignore this email.'])
+         f'It expires in {ttl} minutes. If you did not request this, you can safely ignore this email.'],
+        copy_code=code)
 
 
 def send_welcome(user):
