@@ -71,7 +71,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny'],
     'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer'],
     'DEFAULT_THROTTLE_CLASSES': ['rest_framework.throttling.ScopedRateThrottle'],
-    'DEFAULT_THROTTLE_RATES': {'otp_request': '10/hour', 'otp_verify': '30/hour', 'google': '30/hour', 'quote': '10/hour', 'waitlist': '20/hour', 'auth': '30/hour', 'academy': '30/hour', 'track': '240/hour'},
+    'DEFAULT_THROTTLE_RATES': {'otp_request': '10/hour', 'otp_verify': '30/hour', 'google': '30/hour', 'quote': '10/hour', 'waitlist': '20/hour', 'auth': '30/hour', 'academy': '30/hour', 'track': '240/hour', 'pay': '30/hour'},
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 50,
     'EXCEPTION_HANDLER': 'config.urls.api_exception_handler',
@@ -88,6 +88,9 @@ CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localho
 GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID', default='')
 MICROSOFT_CLIENT_ID = env('MICROSOFT_CLIENT_ID', default='')  # Azure app (Entra ID) application/client ID
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')  # used for links inside emails
+ACADEMY_URL = env('ACADEMY_URL', default='http://localhost:5174')  # the Academy site (students are sent here after paying)
+PAYSTACK_SECRET_KEY = env('PAYSTACK_SECRET_KEY', default='')  # sk_test_... or sk_live_...
+PAYSTACK_CURRENCY = env('PAYSTACK_CURRENCY', default='KES')
 # Emails listed here become staff (can open /admin) the next time they sign in.
 ADMIN_EMAILS = [e.lower() for e in env.list('ADMIN_EMAILS', default=[])]
 

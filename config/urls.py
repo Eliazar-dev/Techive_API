@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from core import views as core
 from core import status
+from core import academy as ac
 from rest_framework.views import exception_handler
 
 
@@ -30,6 +31,25 @@ urlpatterns = [
     path('api/admin/waitlist/', core.AdminWaitlistList.as_view()),
     path('api/admin/waitlist/<int:pk>/', core.AdminWaitlistDetail.as_view()),
     path('api/academy/courses/', core.PublicCourseList.as_view()),
+    path('api/academy/courses/<slug:slug>/', ac.PublicCourse.as_view()),
+    path('api/academy/learn/<slug:slug>/', ac.Learn.as_view()),
+    path('api/academy/lessons/<int:pk>/complete/', ac.CompleteLesson.as_view()),
+    path('api/academy/quiz/<slug:slug>/', ac.Quiz.as_view()),
+    path('api/academy/project/<slug:slug>/', ac.SubmitProject.as_view()),
+    path('api/academy/certificate/<slug:slug>/', ac.IssueCertificate.as_view()),
+    path('api/certificates/<str:code>/', ac.VerifyCertificate.as_view()),
+    path('api/academy/referrals/', ac.ReferralView.as_view()),
+    path('api/academy/referrals/claim/', ac.ReferralClaim.as_view()),
+    path('api/academy/payments/checkout/', ac.Checkout.as_view()),
+    path('api/academy/payments/verify/', ac.VerifyPayment.as_view()),
+    path('api/academy/payments/webhook/', ac.PaystackWebhook.as_view()),
+    path('api/admin/payments/', ac.AdminPaymentList.as_view()),
+    path('api/admin/projects/', ac.AdminProjectList.as_view()),
+    path('api/admin/projects/<int:pk>/', ac.AdminProjectDetail.as_view()),
+    path('api/admin/rewards/', ac.AdminRewardList.as_view()),
+    path('api/admin/rewards/<int:pk>/', ac.AdminRewardDetail.as_view()),
+    path('api/admin/sessions/', ac.AdminSessionList.as_view()),
+    path('api/admin/sessions/<int:pk>/', ac.AdminSessionDetail.as_view()),
     path('api/academy/registrations/', core.MyRegistrations.as_view()),
     path('api/academy/info/', core.AcademyInfo.as_view()),
     path('api/content/<str:page>/', core.PublicContent.as_view()),

@@ -84,7 +84,11 @@ class AcademyTests(APITestCase):
         SiteContent.objects.create(page='academy', data={'till_number': '123456', 'payment_instructions': 'Pay via Lipa na M-Pesa Till.'})
 
     def test_seed_migration_created_draft_courses(self):
-        self.assertGreaterEqual(Course.objects.filter(track='Building with AI').count(), 5)  # from migration 0003 (+ the 3 made in setUp)
+        slugs = set(Course.objects.exclude(slug=None).values_list('slug', flat=True))  # from migration 0005
+        self.assertTrue({'website-development-with-ai', 'python-programming', 'computer-packages', 'django-web-development'} <= slugs)
+        cp = Course.objects.get(slug='computer-packages')
+        self.assertEqual((cp.price, cp.referral_reward), (3000, 400))
+        self.assertGreaterEqual(cp.questions.count(), 5)
 
     def test_public_list_hides_unpublished_and_secret_fields(self):
         data = self.client.get('/api/academy/courses/').json()

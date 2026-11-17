@@ -91,6 +91,9 @@ class WaitlistCreate(APIView):
 
 
 # ---------- staff-only (React /admin) ----------
+from .academy import payment_stats  # noqa: E402
+
+
 class AdminStats(APIView):
     permission_classes = [IsAdminUser]
 
@@ -104,6 +107,7 @@ class AdminStats(APIView):
             'waitlist_total': WaitlistEntry.objects.count(),
             'registrations_total': CourseRegistration.objects.count(),
             'visitors_total': Visitor.objects.count(),
+            **payment_stats(),
             'by_service': list(Quote.objects.exclude(service='').values('service').annotate(n=Count('id')).order_by('-n')[:8]),
             'by_status': {r['status']: r['n'] for r in Quote.objects.values('status').annotate(n=Count('id'))},
         })
@@ -151,14 +155,30 @@ class AdminWaitlistDetail(generics.RetrieveUpdateDestroyAPIView):
 class CourseSer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name', 'track', 'description', 'duration', 'mode', 'price', 'tutor', 'rules', 'payment_plan', 'status', 'is_published', 'order']
+        fields = ['id', 'name', 'track', 'description', 'duration', 'mode', 'price', 'tutor', 'rules', 'payment_plan', 'status', 'is_published', 'order',
+                  'slug', 'certificate_fee', 'referral_reward', 'quiz_pass_mark', 'project_brief', 'next_course']
+        extra_kwargs = {'slug': {'required': False, 'allow_null': True, 'allow_blank': True}}
+
+    def validate_slug(self, v):
+        return v or None
 
 
 class CoursePublicSer(serializers.ModelSerializer):
     """Rules and payment plan are NOT in the public list: they are only revealed after registering."""
     class Meta:
         model = Course
-        fields = ['id', 'name', 'track', 'description', 'duration', 'mode', 'price', 'tutor', 'status']
+        fields = ['id', 'name', 'slug', 'track', 'description', 'duration', 'mode', 'price', 'certificate_fee',
+                  'referral_reward', 'tutor', 'status', 'is_free', 'lessons', 'next_course_slug']
+
+    is_free = serializers.SerializerMethodField()
+    lessons = serializers.SerializerMethodField()
+    next_course_slug = serializers.SlugRelatedField(source='next_course', slug_field='slug', read_only=True)
+
+    def get_is_free(self, c):
+        return not c.needs_payment and c.price is not None
+
+    def get_lessons(self, c):
+        return sum(m.lessons.count() for m in c.modules.all())
 
 
 class RegistrationSer(serializers.ModelSerializer):
@@ -217,7 +237,9 @@ class MyRegistrations(generics.ListCreateAPIView):
         return super().get_throttles() if self.request.method == 'POST' else []
 
     def create(self, request, *args, **kwargs):
-        course = Course.objects.filter(pk=request.data.get('course'), is_published=True).first()
+        key = str(request.data.get('course') or '')
+        pub = Course.objects.filter(is_published=True)
+        course = pub.filter(pk=key).first() if key.isdigit() else pub.filter(slug=key).first()
         if not course:
             raise ValidationError({'detail': 'Course not found.'})
         if course.status != Course.Status.OPEN:
