@@ -159,6 +159,15 @@ class ContentTests(APITestCase):
         self.assertEqual(self.client.get('/api/content/about/').json(), {'hero': {'title': 'Hello'}})
         self.assertEqual(self.client.get('/api/content/academy/').json(), {'intro': 'Hi'})
 
+    @override_settings(ADMIN_EMAILS=['boss@example.com'])
+    def test_team_page_is_public_and_admin_editable(self):
+        self.assertEqual(self.client.get('/api/content/team/').json(), {})
+        login(self.client, 'boss@example.com')
+        body = {'hero': {'title': 'The people'}, 'members': [{'name': 'A', 'order': 1}]}
+        self.assertEqual(self.client.put('/api/admin/content/team/', body, format='json').status_code, 200)
+        self.client.credentials()
+        self.assertEqual(self.client.get('/api/content/team/').json(), body)
+
 
 class VisitorTests(APITestCase):
     def test_track_creates_then_counts_visits(self):
