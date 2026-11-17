@@ -102,8 +102,8 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 EMAIL_TIMEOUT = 10  # never let a slow mail server hang a serverless request
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Techive IT Solutions <no-reply@techive.co.ke>')
-TEAM_EMAIL = env('TEAM_EMAIL', default='hello@techive.co.ke')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Techive IT Solutions <no-reply@techiveitsolution.co.ke>')
+TEAM_EMAIL = env('TEAM_EMAIL', default='hello@techiveitsolution.co.ke')
 
 OTP_TTL_MINUTES = 10
 OTP_MAX_ATTEMPTS = 5

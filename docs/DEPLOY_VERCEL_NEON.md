@@ -22,7 +22,7 @@ Vercel does not run migrations, so run them once from your computer against Neon
 | `SECRET_KEY` | a long random string (`python -c "import secrets;print(secrets.token_urlsafe(60))"`) |
 | `DATABASE_URL` | Neon pooled string |
 | `ALLOWED_HOSTS` | `.vercel.app,api.yourdomain.com` |
-| `CORS_ALLOWED_ORIGINS` | your frontend URL, e.g. `https://techive.co.ke` (no trailing slash) |
+| `CORS_ALLOWED_ORIGINS` | your frontend URL, e.g. `https://techiveitsolution.co.ke` (no trailing slash) |
 | `CSRF_TRUSTED_ORIGINS` | your API URL, e.g. `https://api.yourdomain.com` |
 | `GOOGLE_CLIENT_ID` | your Google OAuth web client ID |
 | `ADMIN_EMAILS` | your email(s), comma separated |
