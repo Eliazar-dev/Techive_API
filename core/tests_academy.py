@@ -1,13 +1,14 @@
 import hashlib
 import hmac
 import json
+from io import StringIO
 from unittest import mock
 
 from django.contrib.auth import get_user_model
 from django.test import override_settings
 from rest_framework.test import APITestCase
 
-from .models import (Certificate, Course, CourseRegistration, Lesson, Module, Payment, QuizQuestion, ReferralReward)
+from .models import (Certificate, Course, CourseRegistration, Lesson, LessonProgress, Module, Payment, QuizQuestion, ReferralReward)
 
 U = get_user_model()
 KEY = 'sk_test_x'
@@ -126,3 +127,144 @@ class AcademyTests(APITestCase):
         self.assertTrue(d['is_free'])
         self.assertEqual(d['lessons'], 2)
         self.assertEqual(self.client.get('/api/academy/learn/free-one/').status_code, 401)
+
+
+class ContentAdminTests(APITestCase):
+    def setUp(self):
+        self.course = Course.objects.create(name='Test Course', slug='test-course', price=0, status='open')
+        self.module = Module.objects.create(course=self.course, title='W1', order=1)
+        self.lesson = Lesson.objects.create(module=self.module, title='L1', kind='text', body='x', order=1)
+        self.question = QuizQuestion.objects.create(course=self.course, text='Q?', options=['a', 'b'], correct=1, order=1)
+        self.staff = U.objects.create_superuser(email='staff@x.com', password='Pass12345!')
+        self.user = mk_user('user@x.com')
+
+    def login_staff(self):
+        self.client.force_authenticate(self.staff)
+
+    def login_user(self):
+        self.client.force_authenticate(self.user)
+
+    def test_modules_admin_allowed(self):
+        self.login_staff()
+        r = self.client.get(f'/api/admin/modules/?course={self.course.id}')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)
+        self.assertEqual(r.json()[0]['title'], 'W1')
+
+    def test_modules_normal_user_403(self):
+        self.login_user()
+        r = self.client.get('/api/admin/modules/')
+        self.assertEqual(r.status_code, 403)
+
+    def test_lessons_admin_allowed(self):
+        self.login_staff()
+        r = self.client.get(f'/api/admin/lessons/?course={self.course.id}')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)
+        self.assertEqual(r.json()[0]['title'], 'L1')
+
+    def test_lessons_normal_user_403(self):
+        self.login_user()
+        r = self.client.get('/api/admin/lessons/')
+        self.assertEqual(r.status_code, 403)
+
+    def test_questions_admin_allowed(self):
+        self.login_staff()
+        r = self.client.get(f'/api/admin/questions/?course={self.course.id}')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.json()), 1)
+        self.assertEqual(r.json()[0]['text'], 'Q?')
+
+    def test_questions_normal_user_403(self):
+        self.login_user()
+        r = self.client.get('/api/admin/questions/')
+        self.assertEqual(r.status_code, 403)
+
+    def test_questions_validation_options(self):
+        self.login_staff()
+        # Too few options
+        r = self.client.post('/api/admin/questions/', {
+            'course': self.course.id,
+            'text': 'Q?',
+            'options': ['only'],
+            'correct': 0,
+            'order': 2
+        }, format='json')
+        self.assertEqual(r.status_code, 400)
+        
+        # Too many options
+        r = self.client.post('/api/admin/questions/', {
+            'course': self.course.id,
+            'text': 'Q?',
+            'options': ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+            'correct': 0,
+            'order': 2
+        }, format='json')
+        self.assertEqual(r.status_code, 400)
+        
+        # Empty string option
+        r = self.client.post('/api/admin/questions/', {
+            'course': self.course.id,
+            'text': 'Q?',
+            'options': ['a', ''],
+            'correct': 0,
+            'order': 2
+        }, format='json')
+        self.assertEqual(r.status_code, 400)
+
+    def test_questions_validation_correct(self):
+        self.login_staff()
+        # correct out of range
+        r = self.client.post('/api/admin/questions/', {
+            'course': self.course.id,
+            'text': 'Q?',
+            'options': ['a', 'b'],
+            'correct': 5,
+            'order': 2
+        }, format='json')
+        self.assertEqual(r.status_code, 400)
+        
+        # correct negative
+        r = self.client.post('/api/admin/questions/', {
+            'course': self.course.id,
+            'text': 'Q?',
+            'options': ['a', 'b'],
+            'correct': -1,
+            'order': 2
+        }, format='json')
+        self.assertEqual(r.status_code, 400)
+
+
+class LoadCourseContentCommandTests(APITestCase):
+    def setUp(self):
+        self.course = Course.objects.create(name='Python Test', slug='python-test', price=0, status='open')
+        self.staff = U.objects.create_superuser(email='staff@x.com', password='Pass12345!')
+
+    def test_loads_json(self):
+        from django.core.management import call_command
+        
+        out = StringIO()
+        call_command('load_course_content', '--course', 'python-test', '--dir', 'core/content', stdout=out)
+        output = out.getvalue()
+        self.assertIn('OK', output)
+        self.assertEqual(self.course.modules.count(), 2)
+        self.assertGreater(self.course.questions.count(), 0)
+
+    def test_refuses_replace_with_progress(self):
+        from django.core.management import call_command
+        
+        # Add some progress
+        module = Module.objects.create(course=self.course, title='W1', order=1)
+        lesson = Lesson.objects.create(module=module, title='L1', kind='text', body='x', order=1)
+        user = mk_user('progress@x.com')
+        LessonProgress.objects.create(user=user, lesson=lesson)
+        
+        # Should skip with warning
+        out = StringIO()
+        call_command('load_course_content', '--course', 'python-test', '--replace', '--dir', 'core/content', stdout=out)
+        self.assertIn('SKIP', out.getvalue())
+        
+        # With --force should succeed
+        out = StringIO()
+        call_command('load_course_content', '--course', 'python-test', '--replace', '--force', '--dir', 'core/content', stdout=out)
+        self.assertIn('OK', out.getvalue())

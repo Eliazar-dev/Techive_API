@@ -1,0 +1,228 @@
+{
+  "slug": "python-programming",
+  "description": "Learn Python from zero in 4 weeks. You start by running your first program and finish by building a small project of your own. Each week has short lessons with code you can type and run, and you practise as you go. Free to learn. Finish a short quiz and a small project to earn your Techive certificate, then continue to Django to build full web apps.",
+  "project_brief": "Build a small Python program that solves a real problem. Choose one idea:\n\n1. Shop calculator: ask for item names and prices, store them in a list or dictionary, show the total and apply a discount if the total is above a limit you choose.\n2. Student marks manager: store names and marks, show the average, the highest mark and each student's grade.\n3. Number guessing game with a limited number of tries.\n\nRequirements: use input(), at least one function, a loop, an if/else and a list or dictionary; handle wrong input without crashing (try/except); add comments explaining the main parts.\n\nSubmit: a link to your code (GitHub, Google Colab or a shared Google Doc) and in the notes a sentence on how to run it.",
+  "quiz_pass_mark": 70,
+  "modules": [
+    {
+      "title": "Week 1: Your first programs",
+      "lessons": [
+        {
+          "title": "What is programming and why Python?",
+          "body": "A program is a list of instructions a computer follows. Python is a popular language because it reads almost like English, so beginners can start quickly. It is used for websites (with Django), data analysis, automation, AI and more.\n\nA programmer's real skill is breaking a problem into small clear steps. Writing the code is the second half of the job.\n\nExample of a Python program:\n\nprint(\"Hello, Kenya!\")\n\nThis one line tells the computer to show the text Hello, Kenya! on the screen.\n\nTry it: write down, in plain steps, how you would make a cup of tea. That is what an algorithm looks like."
+        },
+        {
+          "title": "Set up Python and run code",
+          "body": "You can run Python in two ways:\n\n1. Online (easiest): use a free online Python editor such as Google Colab or Replit. Nothing to install; you need only a browser.\n2. On your computer: download Python from python.org, install it (tick \"Add Python to PATH\" on Windows), then write code in a file ending in .py and run it with: python myfile.py\n\nIn an online editor, type the line below and press Run:\n\nprint(\"My first program\")\n\nIf you see an error message, read it slowly. It usually tells you the line number and what is wrong.\n\nTry it: run your first program, then change the text and run it again."
+        },
+        {
+          "title": "Variables, data types, print and input",
+          "body": "A variable is a name that stores a value.\n\nname = \"Amina\"\nage = 17\nheight = 1.62\nis_student = True\n\nCommon types: str (text), int (whole numbers), float (decimals) and bool (True or False). The function type() tells you which one a value is.\n\nShow values with print(). Get input from the user with input(), which always returns text:\n\nname = input(\"Your name: \")\nage = int(input(\"Your age: \"))\nprint(\"Hello\", name, \"you are\", age)\n\nUse int() or float() to convert text into numbers.\n\nTry it: ask for two numbers and print their sum."
+        }
+      ]
+    },
+    {
+      "title": "Week 2: Decisions, loops and lists",
+      "lessons": [
+        {
+          "title": "Operators and if / else decisions",
+          "body": "Arithmetic operators: + - * / (divide), // (whole-number divide), % (remainder), ** (power).\nComparison operators: == (equal), != (not equal), > < >= <=.\nLogic: and, or, not.\n\nDecisions use if, elif and else. Indentation (4 spaces) is part of Python's syntax:\n\nmark = 72\nif mark >= 80:\n    print(\"A\")\nelif mark >= 60:\n    print(\"B\")\nelse:\n    print(\"Keep trying\")\n\nNotice == compares, while = stores a value.\n\nTry it: ask for a mark and print the grade using your own grade boundaries."
+        },
+        {
+          "title": "Loops: repeating things",
+          "body": "A for loop repeats a set number of times or goes through items:\n\nfor i in range(3):\n    print(i)\n\nrange(3) gives 0, 1, 2. A while loop repeats as long as a condition is True:\n\ncount = 3\nwhile count > 0:\n    print(count)\n    count = count - 1\n\nTake care: if the condition never becomes False, the loop never stops. Use break to leave a loop early and continue to skip to the next round.\n\nTry it: print the multiplication table of any number from 1 to 12."
+        },
+        {
+          "title": "Lists: storing many values",
+          "body": "A list holds several values in order.\n\nprices = [120, 80, 200]\nprint(prices[0])   # first item, 120\nprices.append(50)  # add to the end\nprint(len(prices)) # how many items\n\nItems are counted from 0. Useful tools: sum(prices), max(prices), min(prices), sorted(prices) and the in test (80 in prices).\n\nLoop through a list:\n\ntotal = 0\nfor p in prices:\n    total = total + p\nprint(total)\n\nTry it: make a list of 5 marks and print the total and the average."
+        }
+      ]
+    },
+    {
+      "title": "Week 3: Functions, dictionaries and files",
+      "lessons": [
+        {
+          "title": "Functions: reusable blocks of code",
+          "body": "A function packages steps under a name so you can reuse them.\n\ndef add_vat(price):\n    return price * 1.16\n\nprint(add_vat(1000))\n\ndef defines the function, price is a parameter, and return sends a result back. Give functions clear names and keep each one to a single job. Variables created inside a function stay inside it.\n\nYou can give a parameter a default value:\n\ndef greet(name, greeting=\"Hello\"):\n    return greeting + \", \" + name\n\nTry it: write a function that takes a mark and returns a grade, then call it for three marks."
+        },
+        {
+          "title": "Dictionaries and tuples",
+          "body": "A dictionary stores pairs of key and value.\n\nstudent = {\"name\": \"Brian\", \"mark\": 68}\nprint(student[\"name\"])\nstudent[\"mark\"] = 75\nstudent[\"age\"] = 19\n\nLoop through it:\n\nfor key, value in student.items():\n    print(key, value)\n\nA tuple is like a list that cannot be changed: point = (3, 4). Use a dictionary when you want to look things up by name, for example prices = {\"bread\": 60, \"milk\": 55}.\n\nTry it: make a price dictionary for 4 items and print the price of one chosen by the user."
+        },
+        {
+          "title": "Working with text and files",
+          "body": "Strings have useful methods:\n\ntext = \"  Techive Academy \"\nprint(text.strip())     # removes spaces at the ends\nprint(text.upper())\nprint(text.replace(\"Academy\", \"School\"))\nprint(\"Tech\" in text)    # True\n\nf-strings build text neatly:\n\nname = \"Amina\"\nprint(f\"Welcome, {name}!\")\n\nSave and read a text file:\n\nwith open(\"notes.txt\", \"w\") as f:\n    f.write(\"Hello file\")\n\nwith open(\"notes.txt\") as f:\n    print(f.read())\n\nThe with statement closes the file for you. Mode \"w\" writes (and replaces), \"a\" adds to the end, and \"r\" reads.\n\nTry it: ask for a name and save it to a file, then read it back."
+        }
+      ]
+    },
+    {
+      "title": "Week 4: Errors, modules and your project",
+      "lessons": [
+        {
+          "title": "Handling errors with try / except",
+          "body": "Errors happen, especially when users type unexpected things. Without protection the program stops:\n\nage = int(input(\"Age: \"))   # typing 'abc' crashes this\n\nUse try and except:\n\ntry:\n    age = int(input(\"Age: \"))\n    print(\"Next year you will be\", age + 1)\nexcept ValueError:\n    print(\"Please type a number.\")\n\nCommon errors: SyntaxError (typo in the code), NameError (name not defined), TypeError (wrong kind of value), ZeroDivisionError and IndexError (position does not exist).\n\nRead the last line of an error message first. It tells you the type and the reason.\n\nTry it: make a loop that keeps asking for a number until the user types a valid one."
+        },
+        {
+          "title": "Modules and a small program",
+          "body": "A module is code written by someone else that you can import.\n\nimport random\nsecret = random.randint(1, 10)\nprint(secret)\n\nOther useful modules: math (math.sqrt(16)), datetime (dates and times) and json. Thousands more can be installed with pip, for example: pip install requests.\n\nHere is a tiny guessing game that uses what you learned:\n\nimport random\nsecret = random.randint(1, 10)\nfor tries in range(3):\n    guess = int(input(\"Guess 1-10: \"))\n    if guess == secret:\n        print(\"Correct!\")\n        break\nelse:\n    print(\"The number was\", secret)\n\nTry it: type it in, run it, then change the range and the number of tries."
+        },
+        {
+          "title": "Your final project and the road to Django",
+          "body": "Time to build. Choose one of the project ideas in the project brief on this page: a shop calculator, a student marks manager or a guessing game. Plan first in plain steps, write a little, run it, and fix errors as you go. Add comments (lines starting with #) that explain the main parts.\n\nGood habits: use clear variable names, keep functions small and test with different inputs, including wrong ones.\n\nWhen the tutor approves your project and you pass the quiz, you can get your certificate.\n\nWhat next? Django is a Python framework for building complete web applications such as login systems, databases and dashboards. It is the next step in the Techive Academy path, and it builds directly on the Python you learned here."
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "text": "What does print(\"Hi\") do?",
+      "options": [
+        "Asks the user for Hi",
+        "Deletes Hi",
+        "Saves Hi to a file",
+        "Shows Hi on the screen"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "Which is a valid variable assignment?",
+      "options": [
+        "x = 5",
+        "x == 5",
+        "x := := 5",
+        "5 = x"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "What type of value does input() always return?",
+      "options": [
+        "bool",
+        "int",
+        "float",
+        "str (text)"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "What is the output of: print(7 // 2)?",
+      "options": [
+        "3",
+        "4",
+        "3.5",
+        "1"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "What is the output of: print(7 % 3)?",
+      "options": [
+        "1",
+        "7",
+        "2",
+        "0"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Which symbol COMPARES two values for equality?",
+      "options": [
+        "!",
+        "=",
+        "=>",
+        "=="
+      ],
+      "correct": 3
+    },
+    {
+      "text": "What does this print? mark = 65\nif mark >= 80:\n    print(\"A\")\nelif mark >= 60:\n    print(\"B\")\nelse:\n    print(\"C\")",
+      "options": [
+        "C",
+        "A",
+        "Nothing",
+        "B"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "How many times does this print? for i in range(4): print(i)",
+      "options": [
+        "3",
+        "Forever",
+        "4",
+        "5"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "Given prices = [120, 80, 200], what is prices[1]?",
+      "options": [
+        "1",
+        "120",
+        "200",
+        "80"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "What does len([4, 8, 15]) return?",
+      "options": [
+        "15",
+        "3",
+        "27",
+        "2"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "What is the output? def add(a, b):\n    return a + b\nprint(add(2, 3))",
+      "options": [
+        "5",
+        "None",
+        "23",
+        "Error"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Given student = {\"name\": \"Amina\", \"mark\": 70}, what does student[\"mark\"] give?",
+      "options": [
+        "Amina",
+        "Error",
+        "\"mark\"",
+        "70"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "Which line opens a file for reading safely and closes it automatically?",
+      "options": [
+        "open(\"a.txt\").read",
+        "file a.txt",
+        "read(\"a.txt\", close)",
+        "with open(\"a.txt\") as f:"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "Which statement catches a ValueError such as int(\"abc\")?",
+      "options": [
+        "try: ... except ValueError:",
+        "if ValueError:",
+        "catch ValueError",
+        "while ValueError"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Which line imports the random module?",
+      "options": [
+        "include random",
+        "import random",
+        "using random",
+        "get random"
+      ],
+      "correct": 1
+    }
+  ]
+}

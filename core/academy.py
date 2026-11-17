@@ -505,3 +505,93 @@ def payment_stats():
         'rewards_owed': ReferralReward.objects.filter(status='earned').aggregate(t=Sum('amount'))['t'] or 0,
         'projects_waiting': ProjectSubmission.objects.filter(status='pending').count(),
     }
+
+
+# ---------------------------------------------------------------- staff: content management (modules, lessons, questions)
+class ModuleSer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ['id', 'course', 'title', 'order']
+
+
+class LessonSer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'module', 'title', 'kind', 'video_url', 'body', 'file_url', 'order']
+
+
+class QuestionSer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizQuestion
+        fields = ['id', 'course', 'text', 'options', 'correct', 'order']
+
+    def validate_options(self, v):
+        if not isinstance(v, list) or not 2 <= len(v) <= 6:
+            raise ValidationError('Options must be a list of 2 to 6 items.')
+        if not all(isinstance(x, str) and x.strip() for x in v):
+            raise ValidationError('Each option must be a non-empty string.')
+        return v
+
+    def validate(self, data):
+        options = data.get('options', [])
+        correct = data.get('correct', 0)
+        if isinstance(options, list) and (not isinstance(correct, int) or not 0 <= correct < len(options)):
+            raise ValidationError({'correct': '"correct" must be the index of the right option in "options".'})
+        return data
+
+
+class AdminModuleList(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ModuleSer
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = Module.objects.all()
+        course_id = self.request.query_params.get('course')
+        if course_id:
+            qs = qs.filter(course_id=course_id)
+        return qs
+
+
+class AdminModuleDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ModuleSer
+    queryset = Module.objects.all()
+
+
+class AdminLessonList(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = LessonSer
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = Lesson.objects.all()
+        course_id = self.request.query_params.get('course')
+        if course_id:
+            qs = qs.filter(module__course_id=course_id)
+        return qs
+
+
+class AdminLessonDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = LessonSer
+    queryset = Lesson.objects.all()
+
+
+class AdminQuestionList(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = QuestionSer
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = QuizQuestion.objects.all()
+        course_id = self.request.query_params.get('course')
+        if course_id:
+            qs = qs.filter(course_id=course_id)
+        return qs
+
+
+class AdminQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = QuestionSer
+    queryset = QuizQuestion.objects.all()

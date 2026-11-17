@@ -1,0 +1,228 @@
+{
+  "slug": "website-development-with-ai",
+  "description": "Build and publish your own website with the help of AI, even if you have never coded. In 4 weeks you learn to plan a site, write clear instructions for an AI assistant, understand and fix the code it gives you, make the site work on phones and put it online for anyone to visit. Free to learn. Finish a short quiz and a small project to earn your Techive certificate.",
+  "project_brief": "Build and publish a one-page website for a real or imaginary small business (a salon, shop, church, school club, freelancer, etc.).\n\nIt must have: (1) a clear headline saying what the business does, (2) an About section, (3) a Services or Products section with at least 3 items, (4) a Contact section with a working WhatsApp or phone link, (5) a design that looks good on a phone.\n\nSubmit: the live link to your website AND, in the notes box, paste 3 of the most useful instructions (prompts) you gave the AI and one thing you had to fix yourself.",
+  "quiz_pass_mark": 70,
+  "modules": [
+    {
+      "title": "Week 1: Understand websites and talk to AI",
+      "lessons": [
+        {
+          "title": "What a website is and how AI helps you build one",
+          "body": "A website is a set of files that a browser (Chrome, Safari) shows as pages. Three languages do the work:\n\n- HTML: the content and structure (headings, paragraphs, buttons).\n- CSS: the look (colours, fonts, spacing).\n- JavaScript: the behaviour (menus that open, forms that check input).\n\nAn AI assistant such as ChatGPT, Claude or Gemini can write these files from a plain description. You do not need to memorise code, but you do need to understand what you are asking for and to check what you get back. Think of AI as a fast junior assistant: it works quickly, but you are the one in charge and the one responsible for the result.\n\nTry it: open any website, right-click and choose Inspect. Find one heading and one button in the code."
+        },
+        {
+          "title": "Writing instructions (prompts) that work",
+          "body": "The quality of what you get depends on the quality of what you ask. A good instruction has four parts:\n\n1. Role: \"You are a web designer.\"\n2. Task: \"Create a one-page website for a hair salon in Nairobi.\"\n3. Details: sections needed, colours, tone, language.\n4. Format: \"Give me one HTML file with the CSS inside it.\"\n\nWeak: \"Make me a website.\"\nStrong: \"You are a web designer. Create a one-page website for Glow Salon in Nairobi with sections: Home, Services with prices in KES, About, and Contact with a WhatsApp button. Use pink and white, friendly tone. Give me one HTML file with the CSS inside.\"\n\nIf the first answer is not right, do not start again. Reply with what to change: \"Make the heading bigger and move the prices into a table.\"\n\nTry it: write a strong instruction for a website about something you care about."
+        },
+        {
+          "title": "Plan your website before you build",
+          "body": "Before any code, answer five questions on paper:\n\n1. Goal: what should a visitor do? (call, buy, book, learn)\n2. Audience: who will visit, and on what device? In Kenya most visitors use a phone.\n3. Pages and sections: a small business often needs only one page with Home, About, Services, Contact.\n4. Content: write your real text and collect your photos and logo.\n5. Look: pick 2 colours and 1 font, and look at two websites you like.\n\nGood planning saves hours. AI cannot guess your business hours, your prices or your phone number, so give it real content.\n\nTry it: complete the five answers for the website you will build in your project."
+        }
+      ]
+    },
+    {
+      "title": "Week 2: Build the first version",
+      "lessons": [
+        {
+          "title": "Reading HTML: tags, headings, links and images",
+          "body": "HTML uses tags in pairs: <p>Hello</p> is a paragraph. The tags you will meet most:\n\n- <h1> to <h3>: headings (one h1 per page)\n- <p>: paragraph\n- <a href=\"https://...\">: a link\n- <img src=\"photo.jpg\" alt=\"description\">: an image, with alt text for accessibility\n- <ul> and <li>: a bullet list\n- <section> and <div>: boxes that group content\n\nA page starts with <html>, has a <head> (title and settings) and a <body> (what people see).\n\nYou do not have to write this by hand, but you must be able to read it so you can change text, fix a link or swap a photo.\n\nTry it: ask the AI for a tiny page with a heading, a paragraph and a link, then change the text yourself."
+        },
+        {
+          "title": "Generate your first page with AI",
+          "body": "Now build. Use your plan from Week 1 and write one detailed instruction. Ask for a single HTML file with the CSS inside, so there is only one file to manage.\n\nSteps:\n1. Paste your instruction into the AI.\n2. Copy the code it gives you.\n3. Save it in a text file called index.html (use Notepad or any code editor; make sure the name ends in .html and not .txt).\n4. Double-click the file to open it in your browser.\n\nExpect the first version to be about 70% right. That is normal. Look at it on your phone too (you can send the file to your phone, or use a free online editor that shows a preview).\n\nTry it: get your first version running and note three things you want to improve."
+        },
+        {
+          "title": "Make it look right with CSS",
+          "body": "CSS describes how things look. Each rule has a selector and properties:\n\nh1 { color: #7c3aed; font-size: 40px; }\n\nUseful properties: color, background, font-family, font-size, padding (space inside a box), margin (space outside), border-radius (round corners), and display:flex (put items side by side).\n\nTips:\n- Use only 2 main colours plus black/white/grey.\n- Use one or two fonts.\n- Leave lots of white space; crowded pages look amateur.\n- Make sure text is easy to read against its background.\n\nInstead of editing CSS yourself, you can tell the AI: \"Use a dark blue header, white text, and round the buttons.\" Then open the file again and check.\n\nTry it: make three visual improvements, one by editing the CSS yourself."
+        }
+      ]
+    },
+    {
+      "title": "Week 3: Improve it and make it real",
+      "lessons": [
+        {
+          "title": "Make your website work on phones",
+          "body": "Most people will open your site on a phone, so design for small screens first. The key line in the <head> is:\n\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\nWithout it, phones show a tiny zoomed-out page. Other mobile tips:\n\n- Use percentages or max-width instead of fixed widths.\n- Make buttons big enough to tap (at least about 44 pixels high).\n- Keep text at least 16px.\n- Stack sections vertically on small screens using CSS media queries.\n- Compress large photos so the page loads fast on mobile data.\n\nAsk the AI: \"Make this page fully responsive and mobile friendly.\" Then test by narrowing your browser window or opening the page on your phone.\n\nTry it: test your page on a phone and fix at least two problems."
+        },
+        {
+          "title": "Add real content: contact, WhatsApp and a map",
+          "body": "A website that does not help people contact you is a poster. Add:\n\n- A WhatsApp button: <a href=\"https://wa.me/2547XXXXXXXX\">Chat on WhatsApp</a> (country code 254, no plus sign and no leading zero).\n- A call link: <a href=\"tel:+2547XXXXXXXX\">Call us</a>.\n- An email link: <a href=\"mailto:you@example.com\">Email us</a>.\n- A Google Maps link or embedded map for a physical location.\n- Opening hours and prices in a simple list or table.\n\nUse your real details, and test every link by tapping it. Do not put private information (home address, ID number, passwords) on a public website.\n\nTry it: add the WhatsApp, call and email links to your page and test each one."
+        },
+        {
+          "title": "When something breaks: fixing problems with AI",
+          "body": "Things will go wrong. This is how developers work, too. A calm routine:\n\n1. Describe what you expected and what actually happened.\n2. Check the basics: file saved? Correct file name? Refreshed the browser (Ctrl+R)?\n3. Press F12 in Chrome and open the Console tab to see error messages.\n4. Paste the broken part and the error into the AI: \"This button should open WhatsApp but nothing happens. Here is my code and the error. Explain the cause and give the corrected code.\"\n5. Change one thing at a time and test after each change.\n\nKeep a copy of the working version before big changes (copy the file and name it index-v1.html).\n\nAlways read the AI's explanation. That is how you learn, and how you spot answers that are wrong.\n\nTry it: break something on purpose (remove a closing tag) and fix it using the routine."
+        }
+      ]
+    },
+    {
+      "title": "Week 4: Publish, protect and present",
+      "lessons": [
+        {
+          "title": "Put your website online",
+          "body": "Your site is only on your computer until you publish it. Free options for simple sites include GitHub Pages, Netlify and Cloudflare Pages: you upload your index.html and they give you a public link. The usual steps are:\n\n1. Create a free account.\n2. Create a new site or project.\n3. Upload your files (often drag and drop for Netlify, or a repository for GitHub Pages).\n4. Wait a minute and open the link you are given.\n5. Test the link on your phone.\n\nLater you can buy your own domain name (for example yourbusiness.co.ke) from a registrar and connect it. A domain costs a yearly fee; hosting a simple static site can be free.\n\nBe aware that these services change their screens and offers, so follow the on-screen instructions or ask the AI for the current steps.\n\nTry it: publish your page and open the live link on a phone."
+        },
+        {
+          "title": "Quality, safety and honesty when using AI",
+          "body": "Before you share your site, check it carefully:\n\n- Accuracy: AI can invent facts, prices or testimonials. Check every statement. Never publish fake reviews.\n- Ownership: use photos you own or that are free to use. Do not copy another business's text or logo.\n- Privacy: never paste passwords, API keys, ID numbers or customers' private details into an AI tool.\n- Accessibility: add alt text to images, use readable colours, make links clear.\n- Spelling and tone: read it aloud once.\n- Links: click every one.\n\nBe open that you used AI as a tool; you are still the author who checked and approved the result.\n\nTry it: use this list to review your own site and fix two things."
+        },
+        {
+          "title": "Your final project and what comes next",
+          "body": "You now know the full path: plan, instruct the AI, build, fix, improve for phones, publish and check. For your final project, follow the project brief on this page: build and publish a one-page website for a real or imaginary small business and submit the live link plus three of your best instructions.\n\nWhen the tutor approves your project and you pass the quiz, you can get your Techive certificate.\n\nWhat next?\n- Keep improving your site and add a second page.\n- Offer simple websites to small businesses near you (do honest, good work and agree the price before you start).\n- Take the Python Programming course to start writing code yourself.\n\nWell done for finishing."
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "text": "Which language gives a web page its structure and content?",
+      "options": [
+        "CSS",
+        "Excel",
+        "Python",
+        "HTML"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "Which language controls colours, fonts and spacing?",
+      "options": [
+        "CSS",
+        "SQL",
+        "HTML",
+        "PDF"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Which instruction is strongest for an AI assistant?",
+      "options": [
+        "Make me a website.",
+        "Do my work.",
+        "Create a one-page site for Glow Salon in Nairobi with Services in KES, About and a WhatsApp button, in pink and white, as one HTML file.",
+        "Website please fast."
+      ],
+      "correct": 2
+    },
+    {
+      "text": "The first AI answer is only partly right. What is the best next step?",
+      "options": [
+        "Give up",
+        "Publish it anyway",
+        "Reply with the specific changes you want",
+        "Start over from nothing every time"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "What should you do BEFORE asking AI to build your site?",
+      "options": [
+        "Plan the goal, audience, sections and real content",
+        "Delete your photos",
+        "Pay for hosting",
+        "Buy a domain"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Which tag creates a link?",
+      "options": [
+        "<ul>",
+        "<p>",
+        "<h1>",
+        "<a>"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "Why add alt text to images?",
+      "options": [
+        "To make them bigger",
+        "So people who cannot see the image, and search engines, understand it",
+        "It is required by WhatsApp",
+        "To change the colour"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Which line helps a page display properly on phones?",
+      "options": [
+        "<title>My page</title>",
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+        "<br>",
+        "<footer>"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Which is the correct WhatsApp link format for Kenya?",
+      "options": [
+        "whatsapp:0712345678",
+        "https://wa.me/0712345678",
+        "https://wa.me/254712345678",
+        "https://wa.me/+0712345678"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "Your button does nothing. What is a sensible first step?",
+      "options": [
+        "Delete the whole page",
+        "Open the browser Console (F12), read the error and ask the AI to explain it with your code",
+        "Buy a new computer",
+        "Ignore it"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Which should you NEVER paste into an AI tool?",
+      "options": [
+        "A list of services",
+        "A heading you want improved",
+        "A paragraph about your business",
+        "Your passwords or private customer details"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "AI sometimes writes invented facts or fake reviews. What should you do?",
+      "options": [
+        "Publish them, it is the AI's fault",
+        "Hide them in white text",
+        "Check every claim and never publish fake reviews",
+        "Add more fake reviews"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "What does publishing a website mean?",
+      "options": [
+        "Saving it on your desktop",
+        "Putting the files on a web host so anyone can open the link",
+        "Emailing it to yourself",
+        "Printing the page"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "A simple one-page static site can often be hosted:",
+      "options": [
+        "Only on paid servers costing millions",
+        "Only in a shop",
+        "On free services such as GitHub Pages or Netlify",
+        "Only with a TV license"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "Why keep a backup copy (like index-v1.html) before big changes?",
+      "options": [
+        "It makes the site faster",
+        "Browsers require it",
+        "So you can go back if the change breaks the page",
+        "To use more storage"
+      ],
+      "correct": 2
+    }
+  ]
+}

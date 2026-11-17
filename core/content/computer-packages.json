@@ -1,0 +1,264 @@
+{
+  "slug": "computer-packages",
+  "description": "Become confident with the computer programs every office and business uses. Over 2 months you learn computer basics, Microsoft Word, Excel and PowerPoint, plus the internet, email and Google tools. Live classes, recorded lessons and practice on real projects. Earn a Techive certificate after a quiz and a final project.",
+  "project_brief": "Prepare a small business pack for a real or imaginary business. It has three files:\n\n1. Word: a one-page business letter or a CV with a heading style, a table and page numbers.\n2. Excel: a monthly budget or sales sheet with at least 8 rows, formulas (SUM, AVERAGE and one IF), a total row and one chart.\n3. PowerPoint: a 6-slide presentation introducing the business (title, about, services, prices, why choose us, contact), using a consistent design and no more than a few words per bullet.\n\nPut the three files in one Google Drive or OneDrive folder, set it to \"anyone with the link can view\", and submit the link. In the notes, say which feature you are proudest of.",
+  "quiz_pass_mark": 70,
+  "modules": [
+    {
+      "title": "Week 1: Computer basics",
+      "lessons": [
+        {
+          "title": "Parts of a computer and how to use Windows",
+          "body": "A computer has hardware (the parts you can touch) and software (the programs).\n\n- Input: keyboard, mouse, microphone.\n- Processing: the CPU is the brain; RAM is short-term working memory.\n- Storage: hard disk or SSD keeps your files when the computer is off.\n- Output: screen, printer, speakers.\n\nThe operating system (Windows) manages everything. Learn these parts of Windows: the Desktop, the Taskbar, the Start menu, windows (minimise, maximise, close) and Settings.\n\nShut down properly through the Start menu instead of holding the power button, so that files are not damaged.\n\nPractice: open three programs, switch between them with Alt+Tab, and close them all."
+        },
+        {
+          "title": "Files, folders and typing skills",
+          "body": "Files hold your work; folders organise files. Use File Explorer to create folders such as Documents > Course Work.\n\nKey actions:\n- Copy: Ctrl+C. Cut: Ctrl+X. Paste: Ctrl+V.\n- Undo: Ctrl+Z. Save: Ctrl+S. Select all: Ctrl+A.\n- Rename: select the file and press F2.\n- Delete sends a file to the Recycle Bin, where you can restore it.\n\nGive files clear names (CV_Amina_2026.docx, not New Document 7). Keep a backup of important files on a flash disk or cloud storage.\n\nTyping: sit upright, keep your wrists relaxed, and use all fingers. Accuracy first, speed later. Practise 15 minutes daily with a free typing tutor.\n\nPractice: create a folder structure for this course, and save a test file in it."
+        }
+      ]
+    },
+    {
+      "title": "Week 2: Microsoft Word basics",
+      "lessons": [
+        {
+          "title": "Getting started with Word",
+          "body": "Word is for letters, reports, CVs and assignments. Parts of the screen: the Ribbon (tabs such as Home, Insert, Layout), the ruler, the document area and the status bar.\n\nBasics:\n- Type your text first, format after.\n- Select text, then use Home tab tools: Bold (Ctrl+B), Italic (Ctrl+I), Underline (Ctrl+U), font, size and colour.\n- Align text: left (Ctrl+L), centre (Ctrl+E), right (Ctrl+R), justify (Ctrl+J).\n- Save early (Ctrl+S) and often. Use Save As to choose the name and place.\n\nTurn on spell check and fix words underlined in red. Read your document once more before printing.\n\nPractice: type a short letter to a friend and format the heading, the body and the closing."
+        },
+        {
+          "title": "Paragraphs, lists and styles",
+          "body": "Make your document look professional with consistent formatting.\n\n- Line spacing and paragraph spacing: Home > Paragraph group. 1.15 or 1.5 is easy to read.\n- Bullets and numbering for lists.\n- Indents and tabs for neat alignment.\n- Styles: apply Heading 1, Heading 2 and Normal from the Styles gallery instead of changing each heading by hand. When you change a style, every heading using it changes at once, and a table of contents can be built from headings.\n\nUse Format Painter (the paintbrush on the Home tab) to copy formatting from one place to another.\n\nPractice: write a one-page report with a title, two Heading 2 sections and a bulleted list."
+        }
+      ]
+    },
+    {
+      "title": "Week 3: Word for work and school",
+      "lessons": [
+        {
+          "title": "Tables, pictures and page layout",
+          "body": "Tables arrange information in rows and columns: Insert > Table. Use Table Design to change colours and borders, and Layout to add rows, merge cells and align text.\n\nPictures: Insert > Pictures, then drag the corner handles to resize. Use Wrap Text to place a picture beside text.\n\nPage layout:\n- Margins, orientation (portrait or landscape) and size (A4) under the Layout tab.\n- Page numbers: Insert > Page Number.\n- Headers and footers for names and titles.\n- Page breaks (Ctrl+Enter) to start a new page.\n\nBefore printing, use File > Print to see a preview.\n\nPractice: create a price list table with 5 rows, add page numbers and a footer with your name."
+        },
+        {
+          "title": "Professional documents: CV, letters and mail merge",
+          "body": "A good CV is short (1-2 pages), clear and honest. Typical sections: name and contact, profile, education, experience or projects, skills, referees. Use one readable font (such as Calibri or Arial) at 11 or 12 pt, consistent headings and plenty of white space.\n\nFormal letter order: your address, date, receiver's address, greeting (Dear Sir/Madam), subject line, body, closing (Yours faithfully or Yours sincerely) and signature.\n\nMail merge sends the same letter to many people with their own names: Mailings > Start Mail Merge, select recipients from an Excel list, insert merge fields like <<Name>>, then finish and merge.\n\nPractice: write your CV in Word and save it as a PDF (File > Save As > PDF)."
+        }
+      ]
+    },
+    {
+      "title": "Week 4: Microsoft Excel basics",
+      "lessons": [
+        {
+          "title": "Getting to know Excel",
+          "body": "Excel is a spreadsheet program for numbers, lists, budgets and records. A file is a workbook with sheets. Each sheet has columns (A, B, C...), rows (1, 2, 3...) and cells named by column and row, for example B3.\n\nBasics:\n- Click a cell and type. Press Enter to move down, Tab to move right.\n- Select a range by dragging, for example A1:A10.\n- Widen a column by double-clicking the line between column letters.\n- Use Bold, fill colour and borders on the Home tab to make headings clear.\n- Insert or delete rows and columns by right-clicking the number or letter.\n\nKeep one table per sheet, with headings in the first row and no blank rows inside the data.\n\nPractice: build a list of 8 items with names, quantities and prices."
+        },
+        {
+          "title": "Your first formulas",
+          "body": "A formula always starts with =. Excel calculates it and updates when numbers change.\n\n=B2*C2       multiply quantity by price\n=SUM(D2:D9)  add a range\n=AVERAGE(B2:B9)\n=MAX(B2:B9)   =MIN(B2:B9)\n=COUNT(B2:B9)\n\nOperators: + - * / and ^ (power). Excel follows brackets first, then multiplication and division, then addition and subtraction.\n\nAutofill: after writing a formula, drag the small square in the corner of the cell down to copy it to the rows below. Excel adjusts the cell names automatically (relative references).\n\nIf you see ####, widen the column. If you see #DIV/0!, you divided by zero.\n\nPractice: add a Total column that multiplies quantity by price, then a SUM at the bottom."
+        }
+      ]
+    },
+    {
+      "title": "Week 5: Excel formulas and functions",
+      "lessons": [
+        {
+          "title": "Cell references and the IF function",
+          "body": "A relative reference such as B2 changes when copied. An absolute reference such as $B$2 stays fixed (press F4 to add the dollar signs). Use it when every row must use the same cell, for example a VAT rate in $F$1: =D2*$F$1.\n\nThe IF function makes decisions:\n\n=IF(B2>=50,\"Pass\",\"Fail\")\n\nIt means: if B2 is at least 50 then show Pass, otherwise show Fail. You can nest IFs for several grades, but keep them simple.\n\nOther helpful functions: ROUND(number, digits), TODAY(), COUNTIF(range, criteria) to count items that meet a rule, and SUMIF(range, criteria, sum_range) to add only matching rows.\n\nPractice: create a marks sheet with a Pass/Fail column using IF, and count the passes with COUNTIF."
+        },
+        {
+          "title": "Lookups, sorting and filtering",
+          "body": "Sorting puts data in order (Data > Sort). Filtering shows only the rows you want (Data > Filter, then the drop-down arrows). Both work best on a clean table with a header row.\n\nVLOOKUP finds a value in the first column of a table and returns a value from another column:\n\n=VLOOKUP(A2, $F$2:$G$20, 2, FALSE)\n\nThis looks for A2 in the first column of F2:G20 and returns the value in column 2. FALSE means exact match. Newer versions of Excel also have XLOOKUP, which does the same job more flexibly.\n\nData validation (Data > Data Validation) can restrict a cell to a drop-down list, which prevents typing mistakes.\n\nPractice: build a small product price list, then use VLOOKUP to fetch a price by product name."
+        }
+      ]
+    },
+    {
+      "title": "Week 6: Excel charts and real-life sheets",
+      "lessons": [
+        {
+          "title": "Charts that tell a story",
+          "body": "Charts turn numbers into pictures. Select your data including the headings, then Insert > Recommended Charts.\n\n- Column or bar chart: compare categories (sales per month).\n- Line chart: show change over time.\n- Pie chart: show parts of a whole, for a small number of slices.\n\nImprove your chart: add a clear title, label the axes, remove clutter and use readable colours. One chart should make one point.\n\nPivot tables (Insert > PivotTable) summarise large lists quickly, for example total sales per product. Drag fields into Rows and Values. They are worth learning once you are comfortable with basic tables.\n\nPractice: make a column chart of monthly sales and give it a title and axis labels."
+        },
+        {
+          "title": "Build a monthly budget and sales sheet",
+          "body": "Apply everything you learned in one practical sheet.\n\nBudget layout:\n- Column A: Item (Rent, Transport, Airtime, Food, Savings).\n- Column B: Planned amount. Column C: Actual amount. Column D: Difference =B2-C2.\n- Total row with =SUM().\n- A status column: =IF(D2<0,\"Over budget\",\"OK\").\n\nFormat the money with a thousands separator (Home > Number group). Freeze the top row (View > Freeze Panes) so headings stay visible. Use conditional formatting (Home > Conditional Formatting) to colour overspent rows red.\n\nProtect your work: save often, keep a backup copy, and double-check formulas by testing with easy numbers.\n\nPractice: build your own budget for a month and add a chart of planned versus actual."
+        }
+      ]
+    },
+    {
+      "title": "Week 7: Microsoft PowerPoint",
+      "lessons": [
+        {
+          "title": "Creating clear presentations",
+          "body": "PowerPoint helps you present ideas with slides. Start with the story, not the design: what is the one message of each slide?\n\nBasics:\n- New Slide chooses a layout (Title, Title and Content, Two Content).\n- Use Design > Themes for a consistent look. Do not change fonts and colours on every slide.\n- Slide Master (View > Slide Master) changes all slides at once.\n- Present with F5 (from the start) or Shift+F5 (from this slide).\n\nGood design rules: one idea per slide, large text (24 pt or more), 3 to 5 short bullets, high contrast between text and background, one or two fonts, and pictures that add meaning.\n\nPractice: create a 5-slide presentation about yourself or your business."
+        },
+        {
+          "title": "Pictures, transitions and presenting with confidence",
+          "body": "Pictures, icons, charts and simple shapes keep the audience interested. Insert > Pictures, Icons or Chart (you can paste an Excel chart). Align objects with the Align tool so slides look neat.\n\nTransitions (the effect between slides) and animations (effects inside slides) should be simple. Too many effects distract.\n\nPresenting tips:\n- Practise aloud at least twice. Time yourself.\n- Do not read from the slide. Slides support you; you tell the story.\n- Face the audience, speak slowly and pause.\n- Prepare a backup copy on a flash disk and as a PDF (File > Export).\n- Check the projector and sound before you start.\n\nPractice: present your 5 slides to a friend or family member and ask for one improvement."
+        }
+      ]
+    },
+    {
+      "title": "Week 8: Internet, email, cloud tools and final project",
+      "lessons": [
+        {
+          "title": "Internet, email, cloud storage and staying safe",
+          "body": "Use a browser (Chrome, Edge, Firefox) to search and to open websites. Better searching: use specific words, put exact phrases in quotes, and check who published the page.\n\nEmail: a good message has a clear subject, a greeting, a short body and a polite closing. Use Cc for people who should only be informed. Attach files with the paperclip and check the attachment is there before sending.\n\nCloud tools such as Google Drive, Google Docs, Google Sheets, Google Meet or OneDrive let you store files online, share a link and work together in real time. Check the sharing setting before sending a link (view only, comment or edit).\n\nStaying safe:\n- Use long, different passwords and turn on two-step verification.\n- Do not click links or open attachments from people you do not know.\n- Never share a password or an M-Pesa PIN with anyone.\n\nPractice: upload a file to cloud storage and share it as view-only with a friend."
+        },
+        {
+          "title": "Final project and what comes next",
+          "body": "Bring everything together in your final project. Follow the project brief on this page: a Word letter or CV, an Excel budget or sales sheet with formulas and a chart, and a 6-slide PowerPoint, saved in one shared folder.\n\nBefore submitting, check:\n- Files have clear names.\n- Spelling is checked.\n- Formulas give correct totals (test with easy numbers).\n- The folder link is set to \"anyone with the link can view\".\n\nWhen the tutor approves your project and you pass the quiz, you can get your Techive certificate.\n\nWhat next? These skills help in office jobs, in business record keeping and in college. You can continue with the free Website Development with AI course or the free Python Programming course. Also share your referral link: when a friend you referred pays for this course, you earn a reward."
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "text": "Which of these is a piece of HARDWARE?",
+      "options": [
+        "Windows",
+        "Keyboard",
+        "Excel",
+        "Google Chrome"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Which shortcut copies selected text or files?",
+      "options": [
+        "Ctrl+C",
+        "Ctrl+V",
+        "Ctrl+Z",
+        "Ctrl+X"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Which shortcut undoes your last action?",
+      "options": [
+        "Ctrl+S",
+        "Ctrl+P",
+        "Ctrl+Z",
+        "Ctrl+A"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "In Word, what is the best way to make all your headings look the same?",
+      "options": [
+        "Use the space bar to centre them",
+        "Change each heading by hand",
+        "Type headings in capital letters",
+        "Apply Heading styles from the Styles gallery"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "Which Word feature sends the same letter to many people with their own names?",
+      "options": [
+        "Mail Merge",
+        "Track Changes",
+        "Page Break",
+        "Spell Check"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "Where in Word do you add page numbers?",
+      "options": [
+        "Home > Font",
+        "Review > Comments",
+        "View > Zoom",
+        "Insert > Page Number"
+      ],
+      "correct": 3
+    },
+    {
+      "text": "How does every Excel formula begin?",
+      "options": [
+        "#",
+        "=",
+        "&",
+        "@"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Cell B2 holds 4 and cell C2 holds 5. What does =B2*C2 give?",
+      "options": [
+        "45",
+        "20",
+        "1",
+        "9"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Which function adds the numbers in D2 to D9?",
+      "options": [
+        "=TOTAL(D2,D9)",
+        "=SUM(D2:D9)",
+        "=ADD(D2:D9)",
+        "=PLUS(D2:D9)"
+      ],
+      "correct": 1
+    },
+    {
+      "text": "Which formula shows Pass if B2 is 50 or more, otherwise Fail?",
+      "options": [
+        "=IF B2 50 Pass Fail",
+        "=CHECK(B2>50)",
+        "=IF(B2>=50,\"Pass\",\"Fail\")",
+        "=PASS(B2,50)"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "What does the dollar sign in $F$1 do?",
+      "options": [
+        "Deletes the cell",
+        "Shows money",
+        "Keeps the reference fixed when you copy the formula",
+        "Makes the number bigger"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "Which chart type best shows change over time?",
+      "options": [
+        "Pie chart with 15 slices",
+        "Picture",
+        "Line chart",
+        "Table"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "Which rule is good for PowerPoint slides?",
+      "options": [
+        "Fill every slide with long paragraphs",
+        "Use red text on a dark red background",
+        "One idea per slide with large, easy-to-read text",
+        "Use a different font on each slide"
+      ],
+      "correct": 2
+    },
+    {
+      "text": "Which is a safe online habit?",
+      "options": [
+        "Use different long passwords and turn on two-step verification",
+        "Share your M-Pesa PIN with a trusted caller",
+        "Use the same short password everywhere",
+        "Click every link in messages"
+      ],
+      "correct": 0
+    },
+    {
+      "text": "You share a cloud file with the setting \"anyone with the link can view\". What can people with the link do?",
+      "options": [
+        "Nothing at all",
+        "Edit and delete the file",
+        "Pay for it",
+        "Open and read it only"
+      ],
+      "correct": 3
+    }
+  ]
+}

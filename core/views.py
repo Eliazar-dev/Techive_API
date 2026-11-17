@@ -298,7 +298,7 @@ class AdminRegistrationDetail(generics.RetrieveUpdateAPIView):
 # ======================================================================
 # Editable page content (CMS) + cookie-consented visitors
 # ======================================================================
-CONTENT_PAGES = ('home', 'features', 'about', 'contact', 'academy')
+CONTENT_PAGES = ('home', 'features', 'about', 'contact', 'academy', 'academy_site')
 
 
 def check_page(page):
