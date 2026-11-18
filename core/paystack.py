@@ -22,7 +22,8 @@ def configured():
 def _call(method, path, body=None):
     req = urllib.request.Request(
         BASE + path, method=method, data=json.dumps(body).encode() if body is not None else None,
-        headers={'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}', 'Content-Type': 'application/json'})
+        headers={'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}', 'Content-Type': 'application/json',
+                 'User-Agent': 'Techive-Paystack/1.0'})
     try:
         with urllib.request.urlopen(req, timeout=20) as r:
             data = json.loads(r.read().decode())
