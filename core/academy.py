@@ -595,3 +595,29 @@ class AdminQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = QuestionSer
     queryset = QuizQuestion.objects.all()
+
+
+class QuizAttemptSer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email', read_only=True)
+    name = serializers.SerializerMethodField()
+    course_name = serializers.CharField(source='course.name', read_only=True)
+
+    class Meta:
+        model = QuizAttempt
+        fields = ['id', 'email', 'name', 'course_name', 'score', 'passed', 'created_at']
+
+    def get_name(self, obj):
+        return f'{obj.user.first_name} {obj.user.last_name}'.strip() or obj.user.email
+
+
+class AdminQuizAttemptList(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = QuizAttemptSer
+    queryset = QuizAttempt.objects.select_related('user', 'course').order_by('-created_at')
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        course_id = self.request.query_params.get('course')
+        if course_id:
+            qs = qs.filter(course_id=course_id)
+        return qs
