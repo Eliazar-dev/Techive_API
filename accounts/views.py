@@ -56,6 +56,25 @@ def clean_email(value):
     return value
 
 
+class TokenRefreshWithActiveCheck(APIView):
+    """Token refresh that rejects inactive users."""
+    permission_classes = []
+    def post(self, request):
+        refresh = request.data.get('refresh')
+        if not refresh:
+            raise bad('Refresh token is required.')
+        try:
+            token = RefreshToken(refresh)
+            user_id = token.payload.get('user_id')
+            user = User.objects.filter(id=user_id).first()
+            if not user or not user.is_active:
+                raise bad('This account is disabled.')
+        except Exception:
+            raise bad('Invalid refresh token.')
+        access = str(token.access_token)
+        return Response({'access': access})
+
+
 def split_name(full):
     parts = (full or '').strip().split(None, 1)
     return (parts[0] if parts else '')[:150], (parts[1] if len(parts) > 1 else '')[:150]

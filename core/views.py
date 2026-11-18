@@ -15,7 +15,8 @@ from rest_framework.views import APIView
 
 from accounts.models import User
 from accounts import emails
-from .models import Course, CourseRegistration, Quote, SiteContent, Visitor, WaitlistEntry
+from .models import Course, CourseRegistration, Payment, Quote, SiteContent, Visitor, WaitlistEntry
+from . import csv_utils
 
 log = logging.getLogger(__name__)
 
@@ -37,10 +38,11 @@ class QuoteAdminSer(serializers.ModelSerializer):
 
 class UserAdminSer(serializers.ModelSerializer):
     quotes = serializers.IntegerField(source='quote_count', read_only=True)
+    is_active = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined', 'last_login', 'quotes']
+        fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'is_staff', 'is_active', 'date_joined', 'last_login', 'quotes']
 
 
 class WaitlistSer(serializers.ModelSerializer):
@@ -285,6 +287,8 @@ class AdminRegistrationList(generics.ListAPIView):
             qs = qs.filter(course_id=p['course'])
         if p.get('status'):
             qs = qs.filter(status=p['status'])
+        if p.get('payment_status'):
+            qs = qs.filter(payment_status=p['payment_status'])
         return qs
 
 
@@ -378,6 +382,104 @@ class VisitorSer(serializers.ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email if obj.user_id else ''
+
+
+class AdminUserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = UserAdminSer
+    queryset = User.objects.all()
+    http_method_names = ['get', 'patch', 'delete', 'head', 'options']
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.id == request.user.id:
+            return Response({'detail': 'You cannot delete yourself.'}, status=400)
+        if User.objects.filter(is_staff=True).count() <= 1 and obj.is_staff:
+            return Response({'detail': 'Cannot delete the last staff member.'}, status=400)
+        if Payment.objects.filter(user=obj, status=Payment.Status.SUCCESS).exists():
+            return Response({'detail': 'This user has successful payments. Deactivate instead to preserve financial records.'}, status=400)
+        self.perform_destroy(obj)
+        return Response(status=204)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+
+class AdminRegistrationBulkDelete(APIView):
+    permission_classes = [IsAdminUser]
+    def post(self, request):
+        ids = request.data.get('ids', [])
+        if not isinstance(ids, list):
+            return Response({'detail': 'ids must be a list.'}, status=400)
+        force = request.data.get('force', False)
+        from .models import LessonProgress, QuizAttempt, ProjectSubmission
+        regs = CourseRegistration.objects.filter(id__in=ids).select_related('user', 'course')
+        deleted = []
+        refused = []
+        for reg in regs:
+            if Payment.objects.filter(user=reg.user, course=reg.course, status=Payment.Status.SUCCESS).exists() and not force:
+                refused.append(reg.id)
+                continue
+            LessonProgress.objects.filter(user=reg.user, lesson__module__course=reg.course).delete()
+            QuizAttempt.objects.filter(user=reg.user, course=reg.course).delete()
+            ProjectSubmission.objects.filter(user=reg.user, course=reg.course).delete()
+            reg.delete()
+            deleted.append(reg.id)
+        return Response({'deleted': deleted, 'refused': refused})
+
+
+class AdminRegistrationDelete(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = CourseRegistration.objects.all()
+    http_method_names = ['delete', 'head', 'options']
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        force = request.query_params.get('force') == 'true'
+        if Payment.objects.filter(user=obj.user, course=obj.course, status=Payment.Status.SUCCESS).exists() and not force:
+            return Response({'detail': 'This registration has a successful payment. Use ?force=true to proceed.'}, status=400)
+        from .models import LessonProgress, QuizAttempt, ProjectSubmission
+        LessonProgress.objects.filter(user=obj.user, lesson__module__course=obj.course).delete()
+        QuizAttempt.objects.filter(user=obj.user, course=obj.course).delete()
+        ProjectSubmission.objects.filter(user=obj.user, course=obj.course).delete()
+        self.perform_destroy(obj)
+        return Response(status=204)
+
+
+class AdminUserExport(APIView):
+    permission_classes = [IsAdminUser]
+    def get(self, request):
+        qs = User.objects.all().order_by('-date_joined')
+        rows = [[u.email, f'{u.first_name} {u.last_name}'.strip(), u.phone, 'Staff' if u.is_staff else 'Client',
+                 u.date_joined.strftime('%Y-%m-%d %H:%M') if u.date_joined else '',
+                 u.last_login.strftime('%Y-%m-%d %H:%M') if u.last_login else ''] for u in qs]
+        return csv_utils.stream_csv('users.csv', ['name', 'email', 'phone', 'role', 'joined', 'last login'], rows)
+
+
+class AdminRegistrationExport(APIView):
+    permission_classes = [IsAdminUser]
+    def get(self, request):
+        qs = CourseRegistration.objects.select_related('user', 'course')
+        if request.query_params.get('course'):
+            qs = qs.filter(course_id=request.query_params['course'])
+        if request.query_params.get('status'):
+            qs = qs.filter(status=request.query_params['status'])
+        if request.query_params.get('payment_status'):
+            qs = qs.filter(payment_status=request.query_params['payment_status'])
+        rows = [[f'{r.user.first_name} {r.user.last_name}'.strip(), r.user.email, r.user.phone or '',
+                 r.course.name, r.status, f'{r.progress}%', r.payment_status, r.payment_ref or '',
+                 r.created_at.strftime('%Y-%m-%d %H:%M')] for r in qs]
+        return csv_utils.stream_csv('students.csv', ['name', 'email', 'phone', 'course', 'status', 'progress %', 'payment status', 'payment reference', 'registered date'], rows)
+
+
+class AdminPaymentExport(APIView):
+    permission_classes = [IsAdminUser]
+    def get(self, request):
+        from .models import Payment
+        qs = Payment.objects.select_related('user', 'course').order_by('-created_at')
+        rows = [[p.created_at.strftime('%Y-%m-%d %H:%M'), p.user.email, p.course.name, p.purpose,
+                 str(p.amount), p.currency, p.status, p.reference] for p in qs]
+        return csv_utils.stream_csv('payments.csv', ['date', 'student', 'course', 'purpose', 'amount', 'currency', 'status', 'reference'], rows)
 
 
 class AdminVisitorList(generics.ListAPIView):

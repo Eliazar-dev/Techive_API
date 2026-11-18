@@ -9,7 +9,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY', default='dev-only-insecure-key' if DEBUG else None)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.vercel.app'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.vercel.app']) + ['.techiveitsolution.co.ke']
 
 INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes',
@@ -84,7 +84,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
 }
 
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:5173'])
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:5173']) + ['https://techiveitsolution.co.ke', 'https://www.techiveitsolution.co.ke', 'https://academy.techiveitsolution.co.ke']
 GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID', default='')
 MICROSOFT_CLIENT_ID = env('MICROSOFT_CLIENT_ID', default='')  # Azure app (Entra ID) application/client ID
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')  # used for links inside emails
@@ -114,4 +114,4 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=True)
     SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
-    CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+    CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[]) + ['https://techiveitsolution.co.ke', 'https://www.techiveitsolution.co.ke', 'https://academy.techiveitsolution.co.ke', 'https://api.techiveitsolution.co.ke']
