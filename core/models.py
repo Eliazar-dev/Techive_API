@@ -63,6 +63,7 @@ class Course(models.Model):
     certificate_fee = models.PositiveIntegerField(default=250, help_text='KSh the student pays for the certificate. 0 = included / free')
     referral_reward = models.PositiveIntegerField(default=0, help_text='KSh the referrer earns when a friend pays to join. 0 = no reward')
     quiz_pass_mark = models.PositiveSmallIntegerField(default=70, help_text='Percent needed to pass the final quiz')
+    min_attendance = models.PositiveSmallIntegerField(default=80, help_text='Percent of live sessions a student must attend to get certified. 0 = attendance not required')
     project_brief = models.TextField(blank=True, help_text='The small project students submit for the certificate. Empty = no project required')
     next_course = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='previous_courses', help_text='Suggested next (advanced) course')
     tutor = models.CharField(max_length=150, blank=True)
@@ -249,6 +250,34 @@ class LiveSession(models.Model):
 
     def __str__(self):
         return f'{self.course.name}: {self.title}'
+
+
+class AttendanceToken(models.Model):
+    session = models.ForeignKey(LiveSession, on_delete=models.CASCADE, related_name='tokens')
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Token for {self.session.title}'
+
+
+class Attendance(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='attendance')
+    session = models.ForeignKey(LiveSession, on_delete=models.CASCADE, related_name='attendances')
+    checked_in_at = models.DateTimeField(auto_now_add=True)
+    verified = models.BooleanField(default=False)
+    verification_method = models.CharField(max_length=20, default='link')
+
+    class Meta:
+        unique_together = ['user', 'session']
+        ordering = ['-checked_in_at']
+
+    def __str__(self):
+        return f'{self.user.email} - {self.session.title}'
 
 
 # ======================================================================

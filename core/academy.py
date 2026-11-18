@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 
 from accounts import emails
 from . import paystack
-from .models import (Certificate, Course, CourseRegistration, Lesson, LessonProgress, LiveSession, Module, Payment,
+from .models import (Attendance, AttendanceToken, Certificate, Course, CourseRegistration, Lesson, LessonProgress, LiveSession, Module, Payment,
                      ProjectSubmission, QuizAttempt, QuizQuestion, ReferralProfile, ReferralReward)
 
 log = logging.getLogger(__name__)
@@ -248,10 +248,20 @@ def cert_state(user, course, reg):
     project = ProjectSubmission.objects.filter(user=user, course=course).first()
     project_ok = (not course.project_brief) or bool(project and project.status == 'approved')
     fee_ok = (not course.certificate_fee) or Payment.objects.filter(user=user, course=course, purpose='certificate', status='success').exists()
+    # Attendance check
+    total_sessions = course.sessions.count()
+    if course.min_attendance > 0 and total_sessions > 0:
+        attended = Attendance.objects.filter(user=user, session__course=course, verified=True).count()
+        attendance_rate = round(100 * attended / total_sessions)
+        attendance_ok = attendance_rate >= course.min_attendance
+    else:
+        attendance_rate = 100
+        attendance_ok = True
     cert = Certificate.objects.filter(user=user, course=course).first()
     return {
         'quiz_passed': quiz_ok, 'project_approved': project_ok, 'fee': course.certificate_fee, 'fee_paid': fee_ok,
-        'eligible': bool(reg and quiz_ok and project_ok and fee_ok), 'code': cert.code if cert else None,
+        'attendance_rate': attendance_rate, 'attendance_ok': attendance_ok,
+        'eligible': bool(reg and quiz_ok and project_ok and fee_ok and attendance_ok), 'code': cert.code if cert else None,
         'issued_at': cert.issued_at if cert else None,
     }
 
@@ -397,6 +407,49 @@ class VerifyCertificate(APIView):
         return Response({'valid': True, 'name': cert.name, 'course': cert.course.name, 'issued_at': cert.issued_at, 'code': cert.code})
 
 
+# ---------------------------------------------------------------- attendance
+class CheckIn(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, token):
+        token_obj = AttendanceToken.objects.filter(token=token, expires_at__gt=timezone.now()).select_related('session__course').first()
+        if not token_obj:
+            raise NotFound('Invalid or expired check-in link.')
+        session = token_obj.session
+        course = session.course
+        reg = registration_for(request.user, course)
+        if not reg:
+            raise PermissionDenied({'detail': 'You are not registered for this course.'})
+        att, created = Attendance.objects.get_or_create(user=request.user, session=session, defaults={'verified': False})
+        return Response({'detail': 'Checked in successfully.', 'session': session.title, 'course': course.name})
+
+
+class SessionAttendanceList(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = serializers.ModelSerializer
+
+    class Meta:
+        model = Attendance
+        fields = ['id', 'user', 'session', 'checked_in_at', 'verified', 'verification_method']
+
+    def get_queryset(self):
+        session_id = self.request.query_params.get('session')
+        qs = Attendance.objects.select_related('user', 'session').all()
+        if session_id:
+            qs = qs.filter(session_id=session_id)
+        return qs
+
+
+class AttendanceVerify(generics.UpdateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = serializers.ModelSerializer
+    queryset = Attendance.objects.all()
+
+    class Meta:
+        model = Attendance
+        fields = ['id', 'verified', 'verification_method']
+
+
 # ---------------------------------------------------------------- staff
 class ProjectAdminSer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
@@ -479,10 +532,25 @@ class AdminRewardDetail(generics.RetrieveUpdateAPIView):
 
 class SessionSer(serializers.ModelSerializer):
     course_name = serializers.CharField(source='course.name', read_only=True)
+    attendance_count = serializers.SerializerMethodField()
+    checkin_url = serializers.SerializerMethodField()
 
     class Meta:
         model = LiveSession
-        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url']
+        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'checkin_url']
+
+    def get_attendance_count(self, obj):
+        return obj.attendances.count()
+
+    def get_checkin_url(self, obj):
+        # Generate or get existing token for this session
+        token = obj.tokens.first()
+        if not token or token.expires_at < timezone.now():
+            # Create new token if expired or doesn't exist
+            expires = obj.starts_at + timezone.timedelta(hours=2)
+            token = AttendanceToken.objects.create(session=obj, token=secrets.token_urlsafe(32), expires_at=expires)
+        base_url = getattr(settings, 'ACADEMY_URL', 'https://academy.techiveitsolution.co.ke')
+        return f'{base_url}/checkin/{token.token}'
 
 
 class AdminSessionList(generics.ListCreateAPIView):
