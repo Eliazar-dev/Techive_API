@@ -449,14 +449,16 @@ class SessionAttendanceList(generics.ListAPIView):
         return qs
 
 
-class AttendanceVerify(generics.UpdateAPIView):
-    permission_classes = [IsAdminUser]
-    serializer_class = serializers.ModelSerializer
-    queryset = Attendance.objects.all()
-
+class AttendanceVerifySer(serializers.ModelSerializer):
     class Meta:
         model = Attendance
         fields = ['id', 'verified', 'verification_method']
+
+
+class AttendanceVerify(generics.UpdateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AttendanceVerifySer
+    queryset = Attendance.objects.all()
 
 
 # ---------------------------------------------------------------- staff
