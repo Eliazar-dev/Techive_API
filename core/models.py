@@ -246,6 +246,7 @@ class LiveSession(models.Model):
     meet_url = models.URLField(blank=True, help_text='Google Meet link')
     notes = models.TextField(blank=True)
     recording_url = models.URLField(blank=True, help_text='Add after the class so students can watch again')
+    archived = models.BooleanField(default=False, help_text='Hidden from lists but attendance records are preserved')
 
     class Meta:
         ordering = ['starts_at']

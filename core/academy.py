@@ -552,14 +552,25 @@ class AdminRewardDetail(generics.RetrieveUpdateAPIView):
 class SessionSer(serializers.ModelSerializer):
     course_name = serializers.CharField(source='course.name', read_only=True)
     attendance_count = serializers.SerializerMethodField()
+    verified_count = serializers.SerializerMethodField()
+    attendance_pct = serializers.SerializerMethodField()
     checkin_url = serializers.SerializerMethodField()
 
     class Meta:
         model = LiveSession
-        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'checkin_url']
+        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'verified_count', 'attendance_pct', 'checkin_url', 'archived']
 
     def get_attendance_count(self, obj):
         return obj.attendances.count()
+
+    def get_verified_count(self, obj):
+        return obj.attendances.filter(verified=True).count()
+
+    def get_attendance_pct(self, obj):
+        total = CourseRegistration.objects.filter(course=obj.course).exclude(status='dropped').count()
+        if not total:
+            return 0
+        return round(100 * obj.attendances.filter(verified=True).count() / total)
 
     def get_checkin_url(self, obj):
         # Generate or get existing token for this session
@@ -575,13 +586,23 @@ class SessionSer(serializers.ModelSerializer):
 class AdminSessionList(generics.ListCreateAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = SessionSer
-    queryset = LiveSession.objects.select_related('course').order_by('-starts_at')
+
+    def get_queryset(self):
+        qs = LiveSession.objects.select_related('course').order_by('-starts_at')
+        if self.request.query_params.get('archived') != '1':
+            qs = qs.filter(archived=False)
+        return qs
 
 
 class AdminSessionDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = SessionSer
     queryset = LiveSession.objects.select_related('course')
+
+    def perform_destroy(self, instance):
+        # Archive instead of hard-delete so attendance records are preserved
+        instance.archived = True
+        instance.save(update_fields=['archived'])
 
 
 def payment_stats():
