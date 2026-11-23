@@ -242,7 +242,7 @@ class LiveSession(models.Model):
     title = models.CharField(max_length=150)
     starts_at = models.DateTimeField()
     meet_url = models.URLField(blank=True, help_text='Google Meet link')
-    notes = models.CharField(max_length=300, blank=True)
+    notes = models.TextField(blank=True)
     recording_url = models.URLField(blank=True, help_text='Add after the class so students can watch again')
 
     class Meta:
