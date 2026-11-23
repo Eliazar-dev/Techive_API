@@ -63,6 +63,7 @@ urlpatterns = [
     path('api/admin/questions/', ac.AdminQuestionList.as_view()),
     path('api/admin/questions/<int:pk>/', ac.AdminQuestionDetail.as_view()),
     path('api/admin/quiz-attempts/', ac.AdminQuizAttemptList.as_view()),
+    path('api/admin/quiz-attempts/<int:pk>/', ac.AdminQuizAttemptDetail.as_view()),
     path('api/academy/registrations/', core.MyRegistrations.as_view()),
     path('api/academy/info/', core.AcademyInfo.as_view()),
     path('api/content/<str:page>/', core.PublicContent.as_view()),

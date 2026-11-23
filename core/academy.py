@@ -480,7 +480,12 @@ class AdminProjectList(generics.ListAPIView):
     def get_queryset(self):
         qs = ProjectSubmission.objects.select_related('user', 'course')
         st = self.request.query_params.get('status')
-        return qs.filter(status=st) if st else qs
+        if st:
+            qs = qs.filter(status=st)
+        course_id = self.request.query_params.get('course')
+        if course_id:
+            qs = qs.filter(course_id=course_id)
+        return qs
 
 
 class AdminProjectDetail(generics.RetrieveUpdateAPIView):
@@ -697,3 +702,8 @@ class AdminQuizAttemptList(generics.ListAPIView):
         if course_id:
             qs = qs.filter(course_id=course_id)
         return qs
+
+
+class AdminQuizAttemptDetail(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = QuizAttempt.objects.all()
