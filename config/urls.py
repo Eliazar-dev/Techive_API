@@ -49,6 +49,7 @@ urlpatterns = [
     path('api/academy/payments/verify/', ac.VerifyPayment.as_view()),
     path('api/academy/payments/webhook/', ac.PaystackWebhook.as_view()),
     path('api/admin/payments/', ac.AdminPaymentList.as_view()),
+    path('api/admin/payments/<int:pk>/', ac.AdminPaymentDetail.as_view()),
     path('api/admin/payments/export/', core.AdminPaymentExport.as_view()),
     path('api/admin/projects/', ac.AdminProjectList.as_view()),
     path('api/admin/projects/<int:pk>/', ac.AdminProjectDetail.as_view()),

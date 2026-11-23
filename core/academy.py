@@ -515,6 +515,11 @@ class AdminPaymentList(generics.ListAPIView):
         return qs.filter(status=st) if st else qs
 
 
+class AdminPaymentDetail(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = Payment.objects.all()
+
+
 class RewardAdminSer(serializers.ModelSerializer):
     referrer_email = serializers.EmailField(source='referrer.email', read_only=True)
     friend_email = serializers.EmailField(source='referred.email', read_only=True)
