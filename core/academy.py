@@ -287,7 +287,8 @@ class Learn(APIView):
         return Response({
             'course': {'id': course.id, 'name': course.name, 'slug': course.slug, 'description': course.description, 'duration': course.duration,
                        'tutor': course.tutor, 'price': course.price, 'certificate_fee': course.certificate_fee,
-                       'project_brief': course.project_brief, 'rules': course.rules, 'payment_plan': course.payment_plan},
+                       'project_title': course.project_title, 'project_brief': course.project_brief, 'project_requirements': course.project_requirements,
+                       'rules': course.rules, 'payment_plan': course.payment_plan},
             'registration': {'id': reg.id, 'status': reg.status, 'progress': reg.progress, 'progress_note': reg.progress_note, 'payment_status': reg.payment_status},
             'locked': locked, 'modules': modules, 'sessions': sessions,
             'quiz': {'count': course.questions.count(), 'best': best.score if best else None, 'passed': bool(best and best.passed), 'pass_mark': course.quiz_pass_mark},

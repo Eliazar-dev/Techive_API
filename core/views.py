@@ -158,7 +158,7 @@ class CourseSer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'name', 'track', 'description', 'duration', 'mode', 'price', 'tutor', 'rules', 'payment_plan', 'status', 'is_published', 'order',
-                  'slug', 'certificate_fee', 'referral_reward', 'quiz_pass_mark', 'project_brief', 'next_course']
+                  'slug', 'certificate_fee', 'referral_reward', 'quiz_pass_mark', 'project_title', 'project_brief', 'project_requirements', 'next_course']
         extra_kwargs = {'slug': {'required': False, 'allow_null': True, 'allow_blank': True}}
 
     def validate_slug(self, v):
