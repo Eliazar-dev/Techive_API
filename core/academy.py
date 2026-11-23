@@ -424,13 +424,21 @@ class CheckIn(APIView):
         return Response({'detail': 'Checked in successfully.', 'session': session.title, 'course': course.name})
 
 
-class SessionAttendanceList(generics.ListAPIView):
-    permission_classes = [IsAdminUser]
-    serializer_class = serializers.ModelSerializer
+class AttendanceAdminSer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email', read_only=True)
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = Attendance
-        fields = ['id', 'user', 'session', 'checked_in_at', 'verified', 'verification_method']
+        fields = ['id', 'user', 'email', 'name', 'session', 'checked_in_at', 'verified', 'verification_method']
+
+    def get_name(self, o):
+        return f'{o.user.first_name} {o.user.last_name}'.strip() or o.user.email
+
+
+class SessionAttendanceList(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AttendanceAdminSer
 
     def get_queryset(self):
         session_id = self.request.query_params.get('session')
