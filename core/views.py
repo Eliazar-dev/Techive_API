@@ -482,6 +482,19 @@ class AdminPaymentExport(APIView):
         return csv_utils.stream_csv('payments.csv', ['date', 'student', 'course', 'purpose', 'amount', 'currency', 'status', 'reference'], rows)
 
 
+class AdminQuizAttemptExport(APIView):
+    permission_classes = [IsAdminUser]
+    def get(self, request):
+        from .models import QuizAttempt
+        qs = QuizAttempt.objects.select_related('user', 'course').order_by('-created_at')
+        if request.query_params.get('course'):
+            qs = qs.filter(course_id=request.query_params['course'])
+        rows = [[a.created_at.strftime('%Y-%m-%d %H:%M'), a.user.email,
+                 f'{a.user.first_name} {a.user.last_name}'.strip(), a.course.name,
+                 str(a.score), 'Passed' if a.passed else 'Failed'] for a in qs]
+        return csv_utils.stream_csv('quiz-attempts.csv', ['date', 'email', 'name', 'course', 'score %', 'result'], rows)
+
+
 class AdminVisitorList(generics.ListAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = VisitorSer
