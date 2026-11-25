@@ -37,6 +37,7 @@ urlpatterns = [
     path('api/academy/learn/<slug:slug>/', ac.Learn.as_view()),
     path('api/academy/lessons/<int:pk>/complete/', ac.CompleteLesson.as_view()),
     path('api/academy/quiz/<slug:slug>/', ac.Quiz.as_view()),
+    path('api/academy/quiz-attempts/', ac.QuizAttemptsCSV.as_view()),
     path('api/academy/project/<slug:slug>/', ac.SubmitProject.as_view()),
     path('api/academy/certificate/<slug:slug>/', ac.IssueCertificate.as_view()),
     path('api/certificates/<str:code>/', ac.VerifyCertificate.as_view()),

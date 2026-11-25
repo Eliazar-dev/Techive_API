@@ -63,6 +63,8 @@ class Course(models.Model):
     certificate_fee = models.PositiveIntegerField(default=250, help_text='KSh the student pays for the certificate. 0 = included / free')
     referral_reward = models.PositiveIntegerField(default=0, help_text='KSh the referrer earns when a friend pays to join. 0 = no reward')
     quiz_pass_mark = models.PositiveSmallIntegerField(default=70, help_text='Percent needed to pass the final quiz')
+    quiz_max_attempts = models.PositiveSmallIntegerField(null=True, blank=True, help_text='Max quiz attempts per student. Empty = unlimited')
+    quiz_time_limit = models.PositiveSmallIntegerField(null=True, blank=True, help_text='Quiz time limit in minutes. Empty = no timer')
     min_attendance = models.PositiveSmallIntegerField(default=80, help_text='Percent of live sessions a student must attend to get certified. 0 = attendance not required')
     project_title = models.CharField(max_length=150, blank=True, help_text='Title of the final project, e.g. "Build a Python CLI program"')
     project_brief = models.TextField(blank=True, help_text='Instructions for the final project students submit for the certificate. Empty = no project required')

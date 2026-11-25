@@ -293,7 +293,9 @@ class Learn(APIView):
                        'rules': course.rules, 'payment_plan': course.payment_plan},
             'registration': {'id': reg.id, 'status': reg.status, 'progress': reg.progress, 'progress_note': reg.progress_note, 'payment_status': reg.payment_status},
             'locked': locked, 'modules': modules, 'sessions': sessions,
-            'quiz': {'count': course.questions.count(), 'best': best.score if best else None, 'passed': bool(best and best.passed), 'pass_mark': course.quiz_pass_mark},
+            'quiz': {'count': course.questions.count(), 'best': best.score if best else None, 'passed': bool(best and best.passed), 'pass_mark': course.quiz_pass_mark,
+                     'max_attempts': course.quiz_max_attempts, 'time_limit': course.quiz_time_limit,
+                     'attempts_used': QuizAttempt.objects.filter(user=request.user, course=course).count()},
             'project': ({'status': project.status, 'link': project.link, 'notes': project.notes, 'feedback': project.feedback} if project else None),
             'certificate': cert_state(request.user, course, None if locked else reg),
             'next_course': ({'name': nxt.name, 'slug': nxt.slug, 'price': nxt.price, 'status': nxt.status} if nxt else None),
@@ -340,8 +342,27 @@ class Quiz(APIView):
         correct = sum(1 for q in qs if str(answers.get(str(q.id))) == str(q.correct))
         score = round(100 * correct / len(qs))
         passed = score >= course.quiz_pass_mark
+        if course.quiz_max_attempts:
+            used = QuizAttempt.objects.filter(user=request.user, course=course).count()
+            if used >= course.quiz_max_attempts:
+                raise ValidationError({'detail': f'You have used all {course.quiz_max_attempts} quiz attempts.'})
         QuizAttempt.objects.create(user=request.user, course=course, score=score, passed=passed)
         return Response({'score': score, 'passed': passed, 'correct': correct, 'total': len(qs), 'pass_mark': course.quiz_pass_mark})
+
+
+class QuizAttemptsCSV(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        import csv
+        attempts = QuizAttempt.objects.filter(user=request.user).select_related('course').order_by('-created_at')
+        resp = HttpResponse(content_type='text/csv')
+        resp['Content-Disposition'] = 'attachment; filename="my-quiz-results.csv"'
+        w = csv.writer(resp)
+        w.writerow(['Date', 'Course', 'Score %', 'Result'])
+        for a in attempts:
+            w.writerow([a.created_at.strftime('%Y-%m-%d %H:%M'), a.course.name, a.score, 'Passed' if a.passed else 'Failed'])
+        return resp
 
 
 class SubmitProject(APIView):
