@@ -246,6 +246,8 @@ class LiveSession(models.Model):
     meet_url = models.URLField(blank=True, help_text='Google Meet link')
     notes = models.TextField(blank=True)
     recording_url = models.URLField(blank=True, help_text='Add after the class so students can watch again')
+    notes_pdf = models.BinaryField(null=True, blank=True, help_text='Class notes PDF uploaded by admin')
+    notes_pdf_name = models.CharField(max_length=200, blank=True)
     archived = models.BooleanField(default=False, help_text='Hidden from lists but attendance records are preserved')
 
     class Meta:

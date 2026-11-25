@@ -57,6 +57,8 @@ urlpatterns = [
     path('api/admin/rewards/<int:pk>/', ac.AdminRewardDetail.as_view()),
     path('api/admin/sessions/', ac.AdminSessionList.as_view()),
     path('api/admin/sessions/<int:pk>/', ac.AdminSessionDetail.as_view()),
+    path('api/admin/sessions/<int:pk>/notes-pdf/', ac.SessionNotesUpload.as_view()),
+    path('api/academy/sessions/<int:pk>/notes/', ac.SessionNotesDownload.as_view()),
     path('api/admin/modules/', ac.AdminModuleList.as_view()),
     path('api/admin/modules/<int:pk>/', ac.AdminModuleDetail.as_view()),
     path('api/admin/lessons/', ac.AdminLessonList.as_view()),

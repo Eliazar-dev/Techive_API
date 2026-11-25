@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db import IntegrityError, transaction
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.utils import timezone
 from rest_framework import generics, serializers
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
@@ -279,7 +280,8 @@ class Learn(APIView):
         modules = [{'id': m.id, 'title': m.title, 'lessons': [lesson_json(les, done, locked) for les in m.lessons.all()]}
                    for m in course.modules.prefetch_related('lessons')]
         sessions = [{'id': s.id, 'title': s.title, 'starts_at': s.starts_at, 'notes': s.notes,
-                     'meet_url': '' if locked else s.meet_url, 'recording_url': '' if locked else s.recording_url}
+                     'meet_url': '' if locked else s.meet_url, 'recording_url': '' if locked else s.recording_url,
+                     'has_notes_pdf': bool(s.notes_pdf)}
                     for s in course.sessions.all()]
         best = QuizAttempt.objects.filter(user=request.user, course=course).order_by('-score').first()
         project = ProjectSubmission.objects.filter(user=request.user, course=course).first()
@@ -560,7 +562,12 @@ class SessionSer(serializers.ModelSerializer):
 
     class Meta:
         model = LiveSession
-        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'verified_count', 'attendance_pct', 'checkin_url', 'archived']
+        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'verified_count', 'attendance_pct', 'checkin_url', 'archived', 'has_notes_pdf']
+
+    has_notes_pdf = serializers.SerializerMethodField()
+
+    def get_has_notes_pdf(self, obj):
+        return bool(obj.notes_pdf)
 
     def get_attendance_count(self, obj):
         return obj.attendances.count()
@@ -605,6 +612,54 @@ class AdminSessionDetail(generics.RetrieveUpdateDestroyAPIView):
         # Archive instead of hard-delete so attendance records are preserved
         instance.archived = True
         instance.save(update_fields=['archived'])
+
+
+class SessionNotesUpload(APIView):
+    permission_classes = [IsAdminUser]
+    MAX_BYTES = 3 * 1024 * 1024  # ~4MB base64 → fits serverless body limits
+
+    def post(self, request, pk):
+        import base64
+        session = LiveSession.objects.filter(pk=pk).first()
+        if not session:
+            raise NotFound('Session not found.')
+        name = str(request.data.get('name') or 'notes.pdf')[:200]
+        raw = request.data.get('data') or ''
+        try:
+            blob = base64.b64decode(raw, validate=True)
+        except Exception:
+            raise ValidationError({'detail': 'Invalid file data.'})
+        if len(blob) > self.MAX_BYTES:
+            raise ValidationError({'detail': 'File too large — keep the PDF under 3MB.'})
+        session.notes_pdf = blob
+        session.notes_pdf_name = name
+        session.save(update_fields=['notes_pdf', 'notes_pdf_name'])
+        return Response({'detail': 'Notes uploaded.', 'name': name})
+
+    def delete(self, request, pk):
+        session = LiveSession.objects.filter(pk=pk).first()
+        if not session:
+            raise NotFound('Session not found.')
+        session.notes_pdf = None
+        session.notes_pdf_name = ''
+        session.save(update_fields=['notes_pdf', 'notes_pdf_name'])
+        return Response({'detail': 'Notes removed.'})
+
+
+class SessionNotesDownload(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        session = LiveSession.objects.filter(pk=pk).first()
+        if not session or not session.notes_pdf:
+            raise NotFound('No notes for this session.')
+        reg = registration_for(request.user, session.course)
+        if not reg:
+            raise PermissionDenied({'detail': 'You are not registered for this course.'})
+        resp = HttpResponse(bytes(session.notes_pdf), content_type='application/pdf')
+        fname = session.notes_pdf_name or f'notes-session-{session.id}.pdf'
+        resp['Content-Disposition'] = f'inline; filename="{fname}"'
+        return resp
 
 
 def payment_stats():
