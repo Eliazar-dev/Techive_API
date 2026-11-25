@@ -282,7 +282,7 @@ class Learn(APIView):
         sessions = [{'id': s.id, 'title': s.title, 'starts_at': s.starts_at, 'notes': s.notes,
                      'meet_url': '' if locked else s.meet_url, 'recording_url': '' if locked else s.recording_url,
                      'has_notes_pdf': bool(s.notes_pdf)}
-                    for s in course.sessions.all()]
+                    for s in course.sessions.filter(hidden=False)]
         best = QuizAttempt.objects.filter(user=request.user, course=course).order_by('-score').first()
         project = ProjectSubmission.objects.filter(user=request.user, course=course).first()
         nxt = course.next_course if course.next_course and course.next_course.is_published else None
@@ -562,7 +562,7 @@ class SessionSer(serializers.ModelSerializer):
 
     class Meta:
         model = LiveSession
-        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'verified_count', 'attendance_pct', 'checkin_url', 'archived', 'has_notes_pdf']
+        fields = ['id', 'course', 'course_name', 'title', 'starts_at', 'meet_url', 'notes', 'recording_url', 'attendance_count', 'verified_count', 'attendance_pct', 'checkin_url', 'archived', 'hidden', 'has_notes_pdf']
 
     has_notes_pdf = serializers.SerializerMethodField()
 

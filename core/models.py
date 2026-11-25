@@ -249,6 +249,7 @@ class LiveSession(models.Model):
     notes_pdf = models.BinaryField(null=True, blank=True, help_text='Class notes PDF uploaded by admin')
     notes_pdf_name = models.CharField(max_length=200, blank=True)
     archived = models.BooleanField(default=False, help_text='Hidden from lists but attendance records are preserved')
+    hidden = models.BooleanField(default=False, help_text='Hidden from students but still visible to admin')
 
     class Meta:
         ordering = ['starts_at']
